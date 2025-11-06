@@ -8,8 +8,11 @@ export async function onRequest(context) {
   const lon = Number(data.lon);
   const path = data.path ?? [];
 
-  const key = `${time}|${lat}|${lon}`;
+  if (isNaN(lat) || isNaN(lon) {
+    throw new Error('Invalid data');
+  }
 
+  const key = `${time}|${lat}|${lon}`;
   await store.put(key, "", {
     metadata: { time: time, lat: lat, lon: lon, path: path },
     expirationTtl: 15552000  // 180 days
