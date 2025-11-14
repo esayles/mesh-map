@@ -21,13 +21,14 @@
       <input type="text" id="path" name="path">
     </div>
     <div class="form-item">
-      <button tabindex="0" id="submit" name="submit" onclick="putSample()">Submit</button>
+      <button tabindex="0" id="submit" name="submit">Submit</button>
     </div>
   </div>
   <div id="status">
   </div>
 
-  <script>
+  <script type="module">
+    import { parseLocation } from '/content/shared.js'
     const $ = (id) => document.getElementById(id);
     const latTxt = $('lat');
     const lonTxt = $('lon');
@@ -49,21 +50,14 @@
     }
 
     async function putSample() {
-      const latVal = latTxt.value;
-      const lonVal = lonTxt.value;
+      const [lat, lon] = parseLocation(latTxt.value, lonTxt.value);
       const pathVal = pathTxt.value;
       const payload = {
-        lat: parseFloat(latVal),
-        lon: parseFloat(lonVal),
+        lat: lat,
+        lon: lon,
         path: pathVal !== "" ? pathVal.split(',') : []
       };
 
-      if (isNaN(payload.lat) || isNaN(payload.lon)) {
-        setStatus("Invalid position");
-        return;
-      }
-
-      console.log(`putting ${payload}`);
       setStatus('');
 
       const resp = await fetch('/put-sample', {
@@ -77,10 +71,20 @@
       if (!resp.ok) {
         setStatus('HTTP error ' + resp.status);
       } else {
-        setStatus('Sample saved!');
+        setStatus(`Sample saved! ${[lat, lon]}`);
         clearForm();
       }
     }
+
+    async function tryPutSample() {
+      try {
+        await putSample();
+      } catch (error) {
+        setStatus(error);
+      }
+    }
+
+    document.getElementById('submit').addEventListener('click', tryPutSample);
   </script>
 </body>
 

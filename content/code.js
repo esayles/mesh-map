@@ -1,4 +1,4 @@
-import { haversineMiles } from './shared.js'
+import './shared.js'
 
 // Global Init
 const map = L.map('map', { worldCopyJump: true }).setView([47.76837, -122.06078], 10);
@@ -28,11 +28,6 @@ function sampleMarker(s) {
   return marker;
 }
 
-function ageInDays(time) {
-  const dayInMillis = 24 * 60 * 60 * 1000;
-  return (Date.now() - new Date(time)) / dayInMillis;
-}
-
 function repeaterMarker(r) {
   const stale = ageInDays(r.time) > 1;
   const dead = ageInDays(r.time) > 5;
@@ -51,24 +46,6 @@ function repeaterMarker(r) {
   ].join('<br/>');
   marker.bindPopup(details, { maxWidth: 320 });
   return marker;
-}
-
-function getNearest(fromPos, toPosList) {
-  if (toPosList.length === 1) {
-    return toPosList[0];
-  }
-
-  let minDist = haversineMiles(fromPos, toPosList[0]);
-  let minTo = toPosList[0];
-
-  toPosList.forEach(to => {
-    const dist = haversineMiles(fromPos, to);
-    if (dist < minDist) {
-      minTo = to;
-    }
-  });
-
-  return minTo;
 }
 
 function renderNodes(nodes) {
