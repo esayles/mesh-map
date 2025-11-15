@@ -66,7 +66,7 @@ async function cleanRepeaters(context) {
   await Promise.all(repeatersList.keys.map(async r => {
     const time = r.metadata.time ?? 0;
     if (util.ageInDays(time) > 10) {
-      console.log(`Deleting stale ${i.name}`);
+      console.log(`Deleting stale ${r.name}`);
       await store.delete(r.name);
     }
   }));
