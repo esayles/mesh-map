@@ -20,7 +20,8 @@
 
       <header class="flex items-center justify-between">
         <div>
-          <h1 class="flex items-center gap-2 text-2xl font-semibold"><img class="h-8 w-8" src="content/wardrive.png" /> MeshCore Wardrive</h1>
+          <h1 class="flex items-center gap-2 text-2xl font-semibold"><img class="h-8 w-8" src="content/wardrive.png" />
+            MeshCore Wardrive</h1>
           <p class="text-sm text-slate-400">
             Sends location to <span class="font-mono">#wardrive</span> to build the <a class="underline" target="blank"
               href="https://mesh-map.pages.dev">coverage map</a>.
@@ -143,7 +144,8 @@
               href="https://apps.apple.com/us/app/bluefy-web-ble-browser/id1492822055">Bluefy on iOS</a>.</span>
         </div>
         <div class="text-xs italic text-slate-400">
-          <span>Only for <a class="underline" target="blank" href="https://pugetmesh.org/meshcore/">PNW region</a>.</span>
+          <span>Only for <a class="underline" target="blank" href="https://pugetmesh.org/meshcore/">PNW
+              region</a>.</span>
         </div>
       </section>
     </div>
@@ -153,6 +155,22 @@
   <script type="module">
     import { onLoad } from '/content/wardrive.js';
     onLoad();
+  </script>
+  <script>
+    window.addEventListener('load', () => {
+      const info = {
+        hasNavigatorBluetooth: 'bluetooth' in navigator,
+        hasBluefyBluetooth: 'bluetooth' in window,
+        hasNavigatorBluetoothScreenDim: navigator.bluetooth != undefined && 'setScreenDimEnabled' in navigator.bluetooth,
+        hasBluefyBluetoothScreenDim: window.bluetooth != undefined && 'setScreenDimEnabled' in window.bluetooth,
+        setScreenDimEnabledType: typeof window.bluetooth?.setScreenDimEnabled,
+      };
+
+      const pre = document.createElement('pre');
+      pre.className = "text-xs italic text-slate-400";
+      pre.textContent = JSON.stringify(info, null, 2);
+      document.body.appendChild(pre);
+    });
   </script>
 </body>
 
