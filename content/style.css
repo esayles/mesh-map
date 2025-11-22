@@ -35,8 +35,9 @@ body,
   color: #929292;
 }
 
-.repeater-dot.highlight {
-  background: rgba(255, 29, 199, 0.9);
+.leaflet-marker-icon.hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .leaflet-popup-content {
