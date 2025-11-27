@@ -49,7 +49,8 @@ export async function onRequest(context) {
     archive_ok: 0,
     archive_fail: 0,
     delete_ok: 0,
-    delete_fail: 0
+    delete_fail: 0,
+    delete_skip: 0
   };
   const hashToSamples = new Map();
   let cursor = null;
@@ -98,16 +99,17 @@ export async function onRequest(context) {
           metadata: { time: sample.time, path: sample.path }
         });
         result.archive_ok++;
+        try {
+          await sampleStore.delete(sample.key);
+          result.delete_ok++;
+        } catch (e) {
+          console.log(`Delete failed. ${e}`);
+          result.delete_fail++;
+        }
       } catch (e) {
         console.log(`Archive failed. ${e}`);
-        result.archive_fail++
-      }
-      try {
-        await sampleStore.delete(sample.key);
-        result.delete_ok++;
-      } catch (e) {
-        console.log(`Delete failed. ${e}`);
-        result.delete_fail++
+        result.archive_fail++;
+        result.delete_skip++;
       }
     }
   }));
