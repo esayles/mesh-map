@@ -9,7 +9,7 @@ export function sampleKey(lat, lon) {
 
 // Gets [lat, lon] for the specified hash.
 export function posFromHash(hash) {
-  const {latitude: lat, longitude: lon} = geo.decode(hash);
+  const { latitude: lat, longitude: lon } = geo.decode(hash);
   return [lat, lon];
 }
 
@@ -84,4 +84,24 @@ export function pushMap(map, key, value) {
 export function sigmoid(value, scale = 0.25, center = 0) {
   const g = scale * (value - center)
   return 1 / (1 + Math.exp(-g));
+}
+
+export async function retry(func, maxRetries = 5, retryDelayMs = 500) {
+  let attempt = 0;
+  const sleep = ms => new Promise(res => setTimeout(res, ms));
+
+  while (true) {
+    try {
+      await func();
+      return;
+    } catch (err) {
+      attempt++;
+
+      if (attempt >= maxRetries)
+        throw new Error(`Exceeded max retries. ${err}`);
+      else
+        console.log(`Attempt ${attempt} failed with ${err}`);
+        await sleep(retryDelayMs * attempt);
+    }
+  }
 }

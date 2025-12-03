@@ -392,6 +392,23 @@ function sigmoid(value, scale = 0.25, center = 0) {
   const g = scale * (value - center);
   return 1 / (1 + Math.exp(-g));
 }
+async function retry(func, maxRetries = 5, retryDelayMs = 500) {
+  let attempt = 0;
+  const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
+  while (true) {
+    try {
+      await func();
+      return;
+    } catch (err) {
+      attempt++;
+      if (attempt >= maxRetries)
+        throw new Error(`Exceeded max retries. ${err}`);
+      else
+        console.log(`Attempt ${attempt} failed with ${err}`);
+      await sleep(retryDelayMs * attempt);
+    }
+  }
+}
 var export_geo = import_ngeohash.default;
 export {
   ageInDays,
@@ -400,6 +417,7 @@ export {
   parseLocation,
   posFromHash,
   pushMap,
+  retry,
   sampleKey,
   sigmoid
 };
