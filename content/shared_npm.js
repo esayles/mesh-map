@@ -1,7 +1,8 @@
 import geo from 'ngeohash';
 import aes from 'aes-js';
+import { colord } from 'colord';
 
-export { aes, geo };  // export the ngeohash API.
+export { aes, geo };  // export APIs.
 
 // Generates the key for a sample given lat/lon.
 export function sampleKey(lat, lon) {
@@ -143,3 +144,9 @@ export function definedOr(fn, a, b) {
 
 export function or(a, b) { return a || b; }
 export function and(a, b) {return  a && b; }
+
+export function fadeColor(color, amount) {
+  const c = colord(color);
+  const v = c.toHsv().v;
+  return c.desaturate(amount).lighten(amount * (1 - (v / 255))).toHex();
+}

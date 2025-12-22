@@ -29,10 +29,10 @@ var require_main = __commonJS({
   "node_modules/ngeohash/main.js"(exports, module) {
     var BASE32_CODES = "0123456789bcdefghjkmnpqrstuvwxyz";
     var BASE32_CODES_DICT = {};
-    for (i = 0; i < BASE32_CODES.length; i++) {
-      BASE32_CODES_DICT[BASE32_CODES.charAt(i)] = i;
+    for (i2 = 0; i2 < BASE32_CODES.length; i2++) {
+      BASE32_CODES_DICT[BASE32_CODES.charAt(i2)] = i2;
     }
-    var i;
+    var i2;
     var ENCODE_AUTO = "auto";
     var MIN_LAT = -90;
     var MAX_LAT = 90;
@@ -112,8 +112,8 @@ var require_main = __commonJS({
     var decode_bbox = function(hash_string) {
       var isLon = true, maxLat = MAX_LAT, minLat = MIN_LAT, maxLon = MAX_LON, minLon = MIN_LON, mid;
       var hashValue = 0;
-      for (var i2 = 0, l = hash_string.length; i2 < l; i2++) {
-        var code = hash_string[i2].toLowerCase();
+      for (var i3 = 0, l2 = hash_string.length; i3 < l2; i3++) {
+        var code = hash_string[i3].toLowerCase();
         hashValue = BASE32_CODES_DICT[code];
         for (var bits = 4; bits >= 0; bits--) {
           var bit = hashValue >> bits & 1;
@@ -142,9 +142,9 @@ var require_main = __commonJS({
       var maxLat = MAX_LAT, minLat = MIN_LAT, maxLon = MAX_LON, minLon = MIN_LON;
       var latBit = 0, lonBit = 0;
       var step = bitDepth / 2;
-      for (var i2 = 0; i2 < step; i2++) {
-        lonBit = get_bit(hashInt, (step - i2) * 2 - 1);
-        latBit = get_bit(hashInt, (step - i2) * 2 - 2);
+      for (var i3 = 0; i3 < step; i3++) {
+        lonBit = get_bit(hashInt, (step - i3) * 2 - 1);
+        latBit = get_bit(hashInt, (step - i3) * 2 - 2);
         if (latBit === 0) {
           maxLat = (maxLat + minLat) / 2;
         } else {
@@ -345,8 +345,8 @@ var require_aes_js = __commonJS({
         if (!checkInt(arrayish.length)) {
           return false;
         }
-        for (var i = 0; i < arrayish.length; i++) {
-          if (!checkInt(arrayish[i]) || arrayish[i] < 0 || arrayish[i] > 255) {
+        for (var i2 = 0; i2 < arrayish.length; i2++) {
+          if (!checkInt(arrayish[i2]) || arrayish[i2] < 0 || arrayish[i2] > 255) {
             return false;
           }
         }
@@ -389,32 +389,32 @@ var require_aes_js = __commonJS({
       }
       var convertUtf8 = /* @__PURE__ */ (function() {
         function toBytes(text) {
-          var result = [], i = 0;
+          var result = [], i2 = 0;
           text = encodeURI(text);
-          while (i < text.length) {
-            var c = text.charCodeAt(i++);
-            if (c === 37) {
-              result.push(parseInt(text.substr(i, 2), 16));
-              i += 2;
+          while (i2 < text.length) {
+            var c2 = text.charCodeAt(i2++);
+            if (c2 === 37) {
+              result.push(parseInt(text.substr(i2, 2), 16));
+              i2 += 2;
             } else {
-              result.push(c);
+              result.push(c2);
             }
           }
           return coerceArray(result);
         }
         function fromBytes(bytes) {
-          var result = [], i = 0;
-          while (i < bytes.length) {
-            var c = bytes[i];
-            if (c < 128) {
-              result.push(String.fromCharCode(c));
-              i++;
-            } else if (c > 191 && c < 224) {
-              result.push(String.fromCharCode((c & 31) << 6 | bytes[i + 1] & 63));
-              i += 2;
+          var result = [], i2 = 0;
+          while (i2 < bytes.length) {
+            var c2 = bytes[i2];
+            if (c2 < 128) {
+              result.push(String.fromCharCode(c2));
+              i2++;
+            } else if (c2 > 191 && c2 < 224) {
+              result.push(String.fromCharCode((c2 & 31) << 6 | bytes[i2 + 1] & 63));
+              i2 += 2;
             } else {
-              result.push(String.fromCharCode((c & 15) << 12 | (bytes[i + 1] & 63) << 6 | bytes[i + 2] & 63));
-              i += 3;
+              result.push(String.fromCharCode((c2 & 15) << 12 | (bytes[i2 + 1] & 63) << 6 | bytes[i2 + 2] & 63));
+              i2 += 3;
             }
           }
           return result.join("");
@@ -427,17 +427,17 @@ var require_aes_js = __commonJS({
       var convertHex = /* @__PURE__ */ (function() {
         function toBytes(text) {
           var result = [];
-          for (var i = 0; i < text.length; i += 2) {
-            result.push(parseInt(text.substr(i, 2), 16));
+          for (var i2 = 0; i2 < text.length; i2 += 2) {
+            result.push(parseInt(text.substr(i2, 2), 16));
           }
           return result;
         }
         var Hex = "0123456789abcdef";
         function fromBytes(bytes) {
           var result = [];
-          for (var i = 0; i < bytes.length; i++) {
-            var v = bytes[i];
-            result.push(Hex[(v & 240) >> 4] + Hex[v & 15]);
+          for (var i2 = 0; i2 < bytes.length; i2++) {
+            var v2 = bytes[i2];
+            result.push(Hex[(v2 & 240) >> 4] + Hex[v2 & 15]);
           }
           return result.join("");
         }
@@ -464,9 +464,9 @@ var require_aes_js = __commonJS({
       var U4 = [0, 151849742, 303699484, 454499602, 607398968, 758720310, 908999204, 1059270954, 1214797936, 1097159550, 1517440620, 1400849762, 1817998408, 1699839814, 2118541908, 2001430874, 2429595872, 2581445614, 2194319100, 2345119218, 3034881240, 3186202582, 2801699524, 2951971274, 3635996816, 3518358430, 3399679628, 3283088770, 4237083816, 4118925222, 4002861748, 3885750714, 1002142683, 850817237, 698445255, 548169417, 529487843, 377642221, 227885567, 77089521, 1943217067, 2061379749, 1640576439, 1757691577, 1474760595, 1592394909, 1174215055, 1290801793, 2875968315, 2724642869, 3111247143, 2960971305, 2405426947, 2253581325, 2638606623, 2487810577, 3808662347, 3926825029, 4044981591, 4162096729, 3342319475, 3459953789, 3576539503, 3693126241, 1986918061, 2137062819, 1685577905, 1836772287, 1381620373, 1532285339, 1078185097, 1229899655, 1040559837, 923313619, 740276417, 621982671, 439452389, 322734571, 137073913, 19308535, 3871163981, 4021308739, 4104605777, 4255800159, 3263785589, 3414450555, 3499326569, 3651041127, 2933202493, 2815956275, 3167684641, 3049390895, 2330014213, 2213296395, 2566595609, 2448830231, 1305906550, 1155237496, 1607244650, 1455525988, 1776460110, 1626319424, 2079897426, 1928707164, 96392454, 213114376, 396673818, 514443284, 562755902, 679998e3, 865136418, 983426092, 3708173718, 3557504664, 3474729866, 3323011204, 4180808110, 4030667424, 3945269170, 3794078908, 2507040230, 2623762152, 2272556026, 2390325492, 2975484382, 3092726480, 2738905026, 2857194700, 3973773121, 3856137295, 4274053469, 4157467219, 3371096953, 3252932727, 3673476453, 3556361835, 2763173681, 2915017791, 3064510765, 3215307299, 2156299017, 2307622919, 2459735317, 2610011675, 2081048481, 1963412655, 1846563261, 1729977011, 1480485785, 1362321559, 1243905413, 1126790795, 878845905, 1030690015, 645401037, 796197571, 274084841, 425408743, 38544885, 188821243, 3613494426, 3731654548, 3313212038, 3430322568, 4082475170, 4200115116, 3780097726, 3896688048, 2668221674, 2516901860, 2366882550, 2216610296, 3141400786, 2989552604, 2837966542, 2687165888, 1202797690, 1320957812, 1437280870, 1554391400, 1669664834, 1787304780, 1906247262, 2022837584, 265905162, 114585348, 499347990, 349075736, 736970802, 585122620, 972512814, 821712160, 2595684844, 2478443234, 2293045232, 2174754046, 3196267988, 3079546586, 2895723464, 2777952454, 3537852828, 3687994002, 3234156416, 3385345166, 4142626212, 4293295786, 3841024952, 3992742070, 174567692, 57326082, 410887952, 292596766, 777231668, 660510266, 1011452712, 893681702, 1108339068, 1258480242, 1343618912, 1494807662, 1715193156, 1865862730, 1948373848, 2100090966, 2701949495, 2818666809, 3004591147, 3122358053, 2235061775, 2352307457, 2535604243, 2653899549, 3915653703, 3764988233, 4219352155, 4067639125, 3444575871, 3294430577, 3746175075, 3594982253, 836553431, 953270745, 600235211, 718002117, 367585007, 484830689, 133361907, 251657213, 2041877159, 1891211689, 1806599355, 1654886325, 1568718495, 1418573201, 1335535747, 1184342925];
       function convertToInt32(bytes) {
         var result = [];
-        for (var i = 0; i < bytes.length; i += 4) {
+        for (var i2 = 0; i2 < bytes.length; i2 += 4) {
           result.push(
-            bytes[i] << 24 | bytes[i + 1] << 16 | bytes[i + 2] << 8 | bytes[i + 3]
+            bytes[i2] << 24 | bytes[i2 + 1] << 16 | bytes[i2 + 2] << 8 | bytes[i2 + 3]
           );
         }
         return result;
@@ -487,7 +487,7 @@ var require_aes_js = __commonJS({
         }
         this._Ke = [];
         this._Kd = [];
-        for (var i = 0; i <= rounds; i++) {
+        for (var i2 = 0; i2 <= rounds; i2++) {
           this._Ke.push([0, 0, 0, 0]);
           this._Kd.push([0, 0, 0, 0]);
         }
@@ -495,44 +495,44 @@ var require_aes_js = __commonJS({
         var KC = this.key.length / 4;
         var tk = convertToInt32(this.key);
         var index;
-        for (var i = 0; i < KC; i++) {
-          index = i >> 2;
-          this._Ke[index][i % 4] = tk[i];
-          this._Kd[rounds - index][i % 4] = tk[i];
+        for (var i2 = 0; i2 < KC; i2++) {
+          index = i2 >> 2;
+          this._Ke[index][i2 % 4] = tk[i2];
+          this._Kd[rounds - index][i2 % 4] = tk[i2];
         }
         var rconpointer = 0;
-        var t = KC, tt;
-        while (t < roundKeyCount) {
+        var t2 = KC, tt;
+        while (t2 < roundKeyCount) {
           tt = tk[KC - 1];
           tk[0] ^= S[tt >> 16 & 255] << 24 ^ S[tt >> 8 & 255] << 16 ^ S[tt & 255] << 8 ^ S[tt >> 24 & 255] ^ rcon[rconpointer] << 24;
           rconpointer += 1;
           if (KC != 8) {
-            for (var i = 1; i < KC; i++) {
-              tk[i] ^= tk[i - 1];
+            for (var i2 = 1; i2 < KC; i2++) {
+              tk[i2] ^= tk[i2 - 1];
             }
           } else {
-            for (var i = 1; i < KC / 2; i++) {
-              tk[i] ^= tk[i - 1];
+            for (var i2 = 1; i2 < KC / 2; i2++) {
+              tk[i2] ^= tk[i2 - 1];
             }
             tt = tk[KC / 2 - 1];
             tk[KC / 2] ^= S[tt & 255] ^ S[tt >> 8 & 255] << 8 ^ S[tt >> 16 & 255] << 16 ^ S[tt >> 24 & 255] << 24;
-            for (var i = KC / 2 + 1; i < KC; i++) {
-              tk[i] ^= tk[i - 1];
+            for (var i2 = KC / 2 + 1; i2 < KC; i2++) {
+              tk[i2] ^= tk[i2 - 1];
             }
           }
-          var i = 0, r, c;
-          while (i < KC && t < roundKeyCount) {
-            r = t >> 2;
-            c = t % 4;
-            this._Ke[r][c] = tk[i];
-            this._Kd[rounds - r][c] = tk[i++];
-            t++;
+          var i2 = 0, r2, c2;
+          while (i2 < KC && t2 < roundKeyCount) {
+            r2 = t2 >> 2;
+            c2 = t2 % 4;
+            this._Ke[r2][c2] = tk[i2];
+            this._Kd[rounds - r2][c2] = tk[i2++];
+            t2++;
           }
         }
-        for (var r = 1; r < rounds; r++) {
-          for (var c = 0; c < 4; c++) {
-            tt = this._Kd[r][c];
-            this._Kd[r][c] = U1[tt >> 24 & 255] ^ U2[tt >> 16 & 255] ^ U3[tt >> 8 & 255] ^ U4[tt & 255];
+        for (var r2 = 1; r2 < rounds; r2++) {
+          for (var c2 = 0; c2 < 4; c2++) {
+            tt = this._Kd[r2][c2];
+            this._Kd[r2][c2] = U1[tt >> 24 & 255] ^ U2[tt >> 16 & 255] ^ U3[tt >> 8 & 255] ^ U4[tt & 255];
           }
         }
       };
@@ -541,24 +541,24 @@ var require_aes_js = __commonJS({
           throw new Error("invalid plaintext size (must be 16 bytes)");
         }
         var rounds = this._Ke.length - 1;
-        var a = [0, 0, 0, 0];
-        var t = convertToInt32(plaintext);
-        for (var i = 0; i < 4; i++) {
-          t[i] ^= this._Ke[0][i];
+        var a2 = [0, 0, 0, 0];
+        var t2 = convertToInt32(plaintext);
+        for (var i2 = 0; i2 < 4; i2++) {
+          t2[i2] ^= this._Ke[0][i2];
         }
-        for (var r = 1; r < rounds; r++) {
-          for (var i = 0; i < 4; i++) {
-            a[i] = T1[t[i] >> 24 & 255] ^ T2[t[(i + 1) % 4] >> 16 & 255] ^ T3[t[(i + 2) % 4] >> 8 & 255] ^ T4[t[(i + 3) % 4] & 255] ^ this._Ke[r][i];
+        for (var r2 = 1; r2 < rounds; r2++) {
+          for (var i2 = 0; i2 < 4; i2++) {
+            a2[i2] = T1[t2[i2] >> 24 & 255] ^ T2[t2[(i2 + 1) % 4] >> 16 & 255] ^ T3[t2[(i2 + 2) % 4] >> 8 & 255] ^ T4[t2[(i2 + 3) % 4] & 255] ^ this._Ke[r2][i2];
           }
-          t = a.slice();
+          t2 = a2.slice();
         }
         var result = createArray(16), tt;
-        for (var i = 0; i < 4; i++) {
-          tt = this._Ke[rounds][i];
-          result[4 * i] = (S[t[i] >> 24 & 255] ^ tt >> 24) & 255;
-          result[4 * i + 1] = (S[t[(i + 1) % 4] >> 16 & 255] ^ tt >> 16) & 255;
-          result[4 * i + 2] = (S[t[(i + 2) % 4] >> 8 & 255] ^ tt >> 8) & 255;
-          result[4 * i + 3] = (S[t[(i + 3) % 4] & 255] ^ tt) & 255;
+        for (var i2 = 0; i2 < 4; i2++) {
+          tt = this._Ke[rounds][i2];
+          result[4 * i2] = (S[t2[i2] >> 24 & 255] ^ tt >> 24) & 255;
+          result[4 * i2 + 1] = (S[t2[(i2 + 1) % 4] >> 16 & 255] ^ tt >> 16) & 255;
+          result[4 * i2 + 2] = (S[t2[(i2 + 2) % 4] >> 8 & 255] ^ tt >> 8) & 255;
+          result[4 * i2 + 3] = (S[t2[(i2 + 3) % 4] & 255] ^ tt) & 255;
         }
         return result;
       };
@@ -567,24 +567,24 @@ var require_aes_js = __commonJS({
           throw new Error("invalid ciphertext size (must be 16 bytes)");
         }
         var rounds = this._Kd.length - 1;
-        var a = [0, 0, 0, 0];
-        var t = convertToInt32(ciphertext);
-        for (var i = 0; i < 4; i++) {
-          t[i] ^= this._Kd[0][i];
+        var a2 = [0, 0, 0, 0];
+        var t2 = convertToInt32(ciphertext);
+        for (var i2 = 0; i2 < 4; i2++) {
+          t2[i2] ^= this._Kd[0][i2];
         }
-        for (var r = 1; r < rounds; r++) {
-          for (var i = 0; i < 4; i++) {
-            a[i] = T5[t[i] >> 24 & 255] ^ T6[t[(i + 3) % 4] >> 16 & 255] ^ T7[t[(i + 2) % 4] >> 8 & 255] ^ T8[t[(i + 1) % 4] & 255] ^ this._Kd[r][i];
+        for (var r2 = 1; r2 < rounds; r2++) {
+          for (var i2 = 0; i2 < 4; i2++) {
+            a2[i2] = T5[t2[i2] >> 24 & 255] ^ T6[t2[(i2 + 3) % 4] >> 16 & 255] ^ T7[t2[(i2 + 2) % 4] >> 8 & 255] ^ T8[t2[(i2 + 1) % 4] & 255] ^ this._Kd[r2][i2];
           }
-          t = a.slice();
+          t2 = a2.slice();
         }
         var result = createArray(16), tt;
-        for (var i = 0; i < 4; i++) {
-          tt = this._Kd[rounds][i];
-          result[4 * i] = (Si[t[i] >> 24 & 255] ^ tt >> 24) & 255;
-          result[4 * i + 1] = (Si[t[(i + 3) % 4] >> 16 & 255] ^ tt >> 16) & 255;
-          result[4 * i + 2] = (Si[t[(i + 2) % 4] >> 8 & 255] ^ tt >> 8) & 255;
-          result[4 * i + 3] = (Si[t[(i + 1) % 4] & 255] ^ tt) & 255;
+        for (var i2 = 0; i2 < 4; i2++) {
+          tt = this._Kd[rounds][i2];
+          result[4 * i2] = (Si[t2[i2] >> 24 & 255] ^ tt >> 24) & 255;
+          result[4 * i2 + 1] = (Si[t2[(i2 + 3) % 4] >> 16 & 255] ^ tt >> 16) & 255;
+          result[4 * i2 + 2] = (Si[t2[(i2 + 2) % 4] >> 8 & 255] ^ tt >> 8) & 255;
+          result[4 * i2 + 3] = (Si[t2[(i2 + 1) % 4] & 255] ^ tt) & 255;
         }
         return result;
       };
@@ -603,10 +603,10 @@ var require_aes_js = __commonJS({
         }
         var ciphertext = createArray(plaintext.length);
         var block = createArray(16);
-        for (var i = 0; i < plaintext.length; i += 16) {
-          copyArray(plaintext, block, 0, i, i + 16);
+        for (var i2 = 0; i2 < plaintext.length; i2 += 16) {
+          copyArray(plaintext, block, 0, i2, i2 + 16);
           block = this._aes.encrypt(block);
-          copyArray(block, ciphertext, i);
+          copyArray(block, ciphertext, i2);
         }
         return ciphertext;
       };
@@ -617,10 +617,10 @@ var require_aes_js = __commonJS({
         }
         var plaintext = createArray(ciphertext.length);
         var block = createArray(16);
-        for (var i = 0; i < ciphertext.length; i += 16) {
-          copyArray(ciphertext, block, 0, i, i + 16);
+        for (var i2 = 0; i2 < ciphertext.length; i2 += 16) {
+          copyArray(ciphertext, block, 0, i2, i2 + 16);
           block = this._aes.decrypt(block);
-          copyArray(block, plaintext, i);
+          copyArray(block, plaintext, i2);
         }
         return plaintext;
       };
@@ -645,13 +645,13 @@ var require_aes_js = __commonJS({
         }
         var ciphertext = createArray(plaintext.length);
         var block = createArray(16);
-        for (var i = 0; i < plaintext.length; i += 16) {
-          copyArray(plaintext, block, 0, i, i + 16);
-          for (var j = 0; j < 16; j++) {
-            block[j] ^= this._lastCipherblock[j];
+        for (var i2 = 0; i2 < plaintext.length; i2 += 16) {
+          copyArray(plaintext, block, 0, i2, i2 + 16);
+          for (var j2 = 0; j2 < 16; j2++) {
+            block[j2] ^= this._lastCipherblock[j2];
           }
           this._lastCipherblock = this._aes.encrypt(block);
-          copyArray(this._lastCipherblock, ciphertext, i);
+          copyArray(this._lastCipherblock, ciphertext, i2);
         }
         return ciphertext;
       };
@@ -662,13 +662,13 @@ var require_aes_js = __commonJS({
         }
         var plaintext = createArray(ciphertext.length);
         var block = createArray(16);
-        for (var i = 0; i < ciphertext.length; i += 16) {
-          copyArray(ciphertext, block, 0, i, i + 16);
+        for (var i2 = 0; i2 < ciphertext.length; i2 += 16) {
+          copyArray(ciphertext, block, 0, i2, i2 + 16);
           block = this._aes.decrypt(block);
-          for (var j = 0; j < 16; j++) {
-            plaintext[i + j] = block[j] ^ this._lastCipherblock[j];
+          for (var j2 = 0; j2 < 16; j2++) {
+            plaintext[i2 + j2] = block[j2] ^ this._lastCipherblock[j2];
           }
-          copyArray(ciphertext, this._lastCipherblock, 0, i, i + 16);
+          copyArray(ciphertext, this._lastCipherblock, 0, i2, i2 + 16);
         }
         return plaintext;
       };
@@ -696,13 +696,13 @@ var require_aes_js = __commonJS({
         }
         var encrypted = coerceArray(plaintext, true);
         var xorSegment;
-        for (var i = 0; i < encrypted.length; i += this.segmentSize) {
+        for (var i2 = 0; i2 < encrypted.length; i2 += this.segmentSize) {
           xorSegment = this._aes.encrypt(this._shiftRegister);
-          for (var j = 0; j < this.segmentSize; j++) {
-            encrypted[i + j] ^= xorSegment[j];
+          for (var j2 = 0; j2 < this.segmentSize; j2++) {
+            encrypted[i2 + j2] ^= xorSegment[j2];
           }
           copyArray(this._shiftRegister, this._shiftRegister, 0, this.segmentSize);
-          copyArray(encrypted, this._shiftRegister, 16 - this.segmentSize, i, i + this.segmentSize);
+          copyArray(encrypted, this._shiftRegister, 16 - this.segmentSize, i2, i2 + this.segmentSize);
         }
         return encrypted;
       };
@@ -712,13 +712,13 @@ var require_aes_js = __commonJS({
         }
         var plaintext = coerceArray(ciphertext, true);
         var xorSegment;
-        for (var i = 0; i < plaintext.length; i += this.segmentSize) {
+        for (var i2 = 0; i2 < plaintext.length; i2 += this.segmentSize) {
           xorSegment = this._aes.encrypt(this._shiftRegister);
-          for (var j = 0; j < this.segmentSize; j++) {
-            plaintext[i + j] ^= xorSegment[j];
+          for (var j2 = 0; j2 < this.segmentSize; j2++) {
+            plaintext[i2 + j2] ^= xorSegment[j2];
           }
           copyArray(this._shiftRegister, this._shiftRegister, 0, this.segmentSize);
-          copyArray(ciphertext, this._shiftRegister, 16 - this.segmentSize, i, i + this.segmentSize);
+          copyArray(ciphertext, this._shiftRegister, 16 - this.segmentSize, i2, i2 + this.segmentSize);
         }
         return plaintext;
       };
@@ -739,12 +739,12 @@ var require_aes_js = __commonJS({
       };
       ModeOfOperationOFB.prototype.encrypt = function(plaintext) {
         var encrypted = coerceArray(plaintext, true);
-        for (var i = 0; i < encrypted.length; i++) {
+        for (var i2 = 0; i2 < encrypted.length; i2++) {
           if (this._lastPrecipherIndex === 16) {
             this._lastPrecipher = this._aes.encrypt(this._lastPrecipher);
             this._lastPrecipherIndex = 0;
           }
-          encrypted[i] ^= this._lastPrecipher[this._lastPrecipherIndex++];
+          encrypted[i2] ^= this._lastPrecipher[this._lastPrecipherIndex++];
         }
         return encrypted;
       };
@@ -783,11 +783,11 @@ var require_aes_js = __commonJS({
         this._counter = bytes;
       };
       Counter.prototype.increment = function() {
-        for (var i = 15; i >= 0; i--) {
-          if (this._counter[i] === 255) {
-            this._counter[i] = 0;
+        for (var i2 = 15; i2 >= 0; i2--) {
+          if (this._counter[i2] === 255) {
+            this._counter[i2] = 0;
           } else {
-            this._counter[i]++;
+            this._counter[i2]++;
             break;
           }
         }
@@ -808,13 +808,13 @@ var require_aes_js = __commonJS({
       };
       ModeOfOperationCTR.prototype.encrypt = function(plaintext) {
         var encrypted = coerceArray(plaintext, true);
-        for (var i = 0; i < encrypted.length; i++) {
+        for (var i2 = 0; i2 < encrypted.length; i2++) {
           if (this._remainingCounterIndex === 16) {
             this._remainingCounter = this._aes.encrypt(this._counter._counter);
             this._remainingCounterIndex = 0;
             this._counter.increment();
           }
-          encrypted[i] ^= this._remainingCounter[this._remainingCounterIndex++];
+          encrypted[i2] ^= this._remainingCounter[this._remainingCounterIndex++];
         }
         return encrypted;
       };
@@ -824,8 +824,8 @@ var require_aes_js = __commonJS({
         var padder = 16 - data.length % 16;
         var result = createArray(data.length + padder);
         copyArray(data, result);
-        for (var i = data.length; i < result.length; i++) {
-          result[i] = padder;
+        for (var i2 = data.length; i2 < result.length; i2++) {
+          result[i2] = padder;
         }
         return result;
       }
@@ -839,8 +839,8 @@ var require_aes_js = __commonJS({
           throw new Error("PKCS#7 padding byte out of range");
         }
         var length = data.length - padder;
-        for (var i = 0; i < padder; i++) {
-          if (data[length + i] !== padder) {
+        for (var i2 = 0; i2 < padder; i2++) {
+          if (data[length + i2] !== padder) {
             throw new Error("PKCS#7 invalid padding byte");
           }
         }
@@ -893,6 +893,166 @@ var require_aes_js = __commonJS({
 // content/shared_npm.js
 var import_ngeohash = __toESM(require_main());
 var import_aes_js = __toESM(require_aes_js());
+
+// node_modules/colord/index.mjs
+var r = { grad: 0.9, turn: 360, rad: 360 / (2 * Math.PI) };
+var t = function(r2) {
+  return "string" == typeof r2 ? r2.length > 0 : "number" == typeof r2;
+};
+var n = function(r2, t2, n2) {
+  return void 0 === t2 && (t2 = 0), void 0 === n2 && (n2 = Math.pow(10, t2)), Math.round(n2 * r2) / n2 + 0;
+};
+var e = function(r2, t2, n2) {
+  return void 0 === t2 && (t2 = 0), void 0 === n2 && (n2 = 1), r2 > n2 ? n2 : r2 > t2 ? r2 : t2;
+};
+var u = function(r2) {
+  return (r2 = isFinite(r2) ? r2 % 360 : 0) > 0 ? r2 : r2 + 360;
+};
+var a = function(r2) {
+  return { r: e(r2.r, 0, 255), g: e(r2.g, 0, 255), b: e(r2.b, 0, 255), a: e(r2.a) };
+};
+var o = function(r2) {
+  return { r: n(r2.r), g: n(r2.g), b: n(r2.b), a: n(r2.a, 3) };
+};
+var i = /^#([0-9a-f]{3,8})$/i;
+var s = function(r2) {
+  var t2 = r2.toString(16);
+  return t2.length < 2 ? "0" + t2 : t2;
+};
+var h = function(r2) {
+  var t2 = r2.r, n2 = r2.g, e2 = r2.b, u2 = r2.a, a2 = Math.max(t2, n2, e2), o2 = a2 - Math.min(t2, n2, e2), i2 = o2 ? a2 === t2 ? (n2 - e2) / o2 : a2 === n2 ? 2 + (e2 - t2) / o2 : 4 + (t2 - n2) / o2 : 0;
+  return { h: 60 * (i2 < 0 ? i2 + 6 : i2), s: a2 ? o2 / a2 * 100 : 0, v: a2 / 255 * 100, a: u2 };
+};
+var b = function(r2) {
+  var t2 = r2.h, n2 = r2.s, e2 = r2.v, u2 = r2.a;
+  t2 = t2 / 360 * 6, n2 /= 100, e2 /= 100;
+  var a2 = Math.floor(t2), o2 = e2 * (1 - n2), i2 = e2 * (1 - (t2 - a2) * n2), s2 = e2 * (1 - (1 - t2 + a2) * n2), h2 = a2 % 6;
+  return { r: 255 * [e2, i2, o2, o2, s2, e2][h2], g: 255 * [s2, e2, e2, i2, o2, o2][h2], b: 255 * [o2, o2, s2, e2, e2, i2][h2], a: u2 };
+};
+var g = function(r2) {
+  return { h: u(r2.h), s: e(r2.s, 0, 100), l: e(r2.l, 0, 100), a: e(r2.a) };
+};
+var d = function(r2) {
+  return { h: n(r2.h), s: n(r2.s), l: n(r2.l), a: n(r2.a, 3) };
+};
+var f = function(r2) {
+  return b((n2 = (t2 = r2).s, { h: t2.h, s: (n2 *= ((e2 = t2.l) < 50 ? e2 : 100 - e2) / 100) > 0 ? 2 * n2 / (e2 + n2) * 100 : 0, v: e2 + n2, a: t2.a }));
+  var t2, n2, e2;
+};
+var c = function(r2) {
+  return { h: (t2 = h(r2)).h, s: (u2 = (200 - (n2 = t2.s)) * (e2 = t2.v) / 100) > 0 && u2 < 200 ? n2 * e2 / 100 / (u2 <= 100 ? u2 : 200 - u2) * 100 : 0, l: u2 / 2, a: t2.a };
+  var t2, n2, e2, u2;
+};
+var l = /^hsla?\(\s*([+-]?\d*\.?\d+)(deg|rad|grad|turn)?\s*,\s*([+-]?\d*\.?\d+)%\s*,\s*([+-]?\d*\.?\d+)%\s*(?:,\s*([+-]?\d*\.?\d+)(%)?\s*)?\)$/i;
+var p = /^hsla?\(\s*([+-]?\d*\.?\d+)(deg|rad|grad|turn)?\s+([+-]?\d*\.?\d+)%\s+([+-]?\d*\.?\d+)%\s*(?:\/\s*([+-]?\d*\.?\d+)(%)?\s*)?\)$/i;
+var v = /^rgba?\(\s*([+-]?\d*\.?\d+)(%)?\s*,\s*([+-]?\d*\.?\d+)(%)?\s*,\s*([+-]?\d*\.?\d+)(%)?\s*(?:,\s*([+-]?\d*\.?\d+)(%)?\s*)?\)$/i;
+var m = /^rgba?\(\s*([+-]?\d*\.?\d+)(%)?\s+([+-]?\d*\.?\d+)(%)?\s+([+-]?\d*\.?\d+)(%)?\s*(?:\/\s*([+-]?\d*\.?\d+)(%)?\s*)?\)$/i;
+var y = { string: [[function(r2) {
+  var t2 = i.exec(r2);
+  return t2 ? (r2 = t2[1]).length <= 4 ? { r: parseInt(r2[0] + r2[0], 16), g: parseInt(r2[1] + r2[1], 16), b: parseInt(r2[2] + r2[2], 16), a: 4 === r2.length ? n(parseInt(r2[3] + r2[3], 16) / 255, 2) : 1 } : 6 === r2.length || 8 === r2.length ? { r: parseInt(r2.substr(0, 2), 16), g: parseInt(r2.substr(2, 2), 16), b: parseInt(r2.substr(4, 2), 16), a: 8 === r2.length ? n(parseInt(r2.substr(6, 2), 16) / 255, 2) : 1 } : null : null;
+}, "hex"], [function(r2) {
+  var t2 = v.exec(r2) || m.exec(r2);
+  return t2 ? t2[2] !== t2[4] || t2[4] !== t2[6] ? null : a({ r: Number(t2[1]) / (t2[2] ? 100 / 255 : 1), g: Number(t2[3]) / (t2[4] ? 100 / 255 : 1), b: Number(t2[5]) / (t2[6] ? 100 / 255 : 1), a: void 0 === t2[7] ? 1 : Number(t2[7]) / (t2[8] ? 100 : 1) }) : null;
+}, "rgb"], [function(t2) {
+  var n2 = l.exec(t2) || p.exec(t2);
+  if (!n2) return null;
+  var e2, u2, a2 = g({ h: (e2 = n2[1], u2 = n2[2], void 0 === u2 && (u2 = "deg"), Number(e2) * (r[u2] || 1)), s: Number(n2[3]), l: Number(n2[4]), a: void 0 === n2[5] ? 1 : Number(n2[5]) / (n2[6] ? 100 : 1) });
+  return f(a2);
+}, "hsl"]], object: [[function(r2) {
+  var n2 = r2.r, e2 = r2.g, u2 = r2.b, o2 = r2.a, i2 = void 0 === o2 ? 1 : o2;
+  return t(n2) && t(e2) && t(u2) ? a({ r: Number(n2), g: Number(e2), b: Number(u2), a: Number(i2) }) : null;
+}, "rgb"], [function(r2) {
+  var n2 = r2.h, e2 = r2.s, u2 = r2.l, a2 = r2.a, o2 = void 0 === a2 ? 1 : a2;
+  if (!t(n2) || !t(e2) || !t(u2)) return null;
+  var i2 = g({ h: Number(n2), s: Number(e2), l: Number(u2), a: Number(o2) });
+  return f(i2);
+}, "hsl"], [function(r2) {
+  var n2 = r2.h, a2 = r2.s, o2 = r2.v, i2 = r2.a, s2 = void 0 === i2 ? 1 : i2;
+  if (!t(n2) || !t(a2) || !t(o2)) return null;
+  var h2 = (function(r3) {
+    return { h: u(r3.h), s: e(r3.s, 0, 100), v: e(r3.v, 0, 100), a: e(r3.a) };
+  })({ h: Number(n2), s: Number(a2), v: Number(o2), a: Number(s2) });
+  return b(h2);
+}, "hsv"]] };
+var N = function(r2, t2) {
+  for (var n2 = 0; n2 < t2.length; n2++) {
+    var e2 = t2[n2][0](r2);
+    if (e2) return [e2, t2[n2][1]];
+  }
+  return [null, void 0];
+};
+var x = function(r2) {
+  return "string" == typeof r2 ? N(r2.trim(), y.string) : "object" == typeof r2 && null !== r2 ? N(r2, y.object) : [null, void 0];
+};
+var M = function(r2, t2) {
+  var n2 = c(r2);
+  return { h: n2.h, s: e(n2.s + 100 * t2, 0, 100), l: n2.l, a: n2.a };
+};
+var H = function(r2) {
+  return (299 * r2.r + 587 * r2.g + 114 * r2.b) / 1e3 / 255;
+};
+var $ = function(r2, t2) {
+  var n2 = c(r2);
+  return { h: n2.h, s: n2.s, l: e(n2.l + 100 * t2, 0, 100), a: n2.a };
+};
+var j = (function() {
+  function r2(r3) {
+    this.parsed = x(r3)[0], this.rgba = this.parsed || { r: 0, g: 0, b: 0, a: 1 };
+  }
+  return r2.prototype.isValid = function() {
+    return null !== this.parsed;
+  }, r2.prototype.brightness = function() {
+    return n(H(this.rgba), 2);
+  }, r2.prototype.isDark = function() {
+    return H(this.rgba) < 0.5;
+  }, r2.prototype.isLight = function() {
+    return H(this.rgba) >= 0.5;
+  }, r2.prototype.toHex = function() {
+    return r3 = o(this.rgba), t2 = r3.r, e2 = r3.g, u2 = r3.b, i2 = (a2 = r3.a) < 1 ? s(n(255 * a2)) : "", "#" + s(t2) + s(e2) + s(u2) + i2;
+    var r3, t2, e2, u2, a2, i2;
+  }, r2.prototype.toRgb = function() {
+    return o(this.rgba);
+  }, r2.prototype.toRgbString = function() {
+    return r3 = o(this.rgba), t2 = r3.r, n2 = r3.g, e2 = r3.b, (u2 = r3.a) < 1 ? "rgba(" + t2 + ", " + n2 + ", " + e2 + ", " + u2 + ")" : "rgb(" + t2 + ", " + n2 + ", " + e2 + ")";
+    var r3, t2, n2, e2, u2;
+  }, r2.prototype.toHsl = function() {
+    return d(c(this.rgba));
+  }, r2.prototype.toHslString = function() {
+    return r3 = d(c(this.rgba)), t2 = r3.h, n2 = r3.s, e2 = r3.l, (u2 = r3.a) < 1 ? "hsla(" + t2 + ", " + n2 + "%, " + e2 + "%, " + u2 + ")" : "hsl(" + t2 + ", " + n2 + "%, " + e2 + "%)";
+    var r3, t2, n2, e2, u2;
+  }, r2.prototype.toHsv = function() {
+    return r3 = h(this.rgba), { h: n(r3.h), s: n(r3.s), v: n(r3.v), a: n(r3.a, 3) };
+    var r3;
+  }, r2.prototype.invert = function() {
+    return w({ r: 255 - (r3 = this.rgba).r, g: 255 - r3.g, b: 255 - r3.b, a: r3.a });
+    var r3;
+  }, r2.prototype.saturate = function(r3) {
+    return void 0 === r3 && (r3 = 0.1), w(M(this.rgba, r3));
+  }, r2.prototype.desaturate = function(r3) {
+    return void 0 === r3 && (r3 = 0.1), w(M(this.rgba, -r3));
+  }, r2.prototype.grayscale = function() {
+    return w(M(this.rgba, -1));
+  }, r2.prototype.lighten = function(r3) {
+    return void 0 === r3 && (r3 = 0.1), w($(this.rgba, r3));
+  }, r2.prototype.darken = function(r3) {
+    return void 0 === r3 && (r3 = 0.1), w($(this.rgba, -r3));
+  }, r2.prototype.rotate = function(r3) {
+    return void 0 === r3 && (r3 = 15), this.hue(this.hue() + r3);
+  }, r2.prototype.alpha = function(r3) {
+    return "number" == typeof r3 ? w({ r: (t2 = this.rgba).r, g: t2.g, b: t2.b, a: r3 }) : n(this.rgba.a, 3);
+    var t2;
+  }, r2.prototype.hue = function(r3) {
+    var t2 = c(this.rgba);
+    return "number" == typeof r3 ? w({ h: r3, s: t2.s, l: t2.l, a: t2.a }) : n(t2.h);
+  }, r2.prototype.isEqual = function(r3) {
+    return this.toHex() === w(r3).toHex();
+  }, r2;
+})();
+var w = function(r2) {
+  return r2 instanceof j ? r2 : new j(r2);
+};
+
+// content/shared_npm.js
 function sampleKey(lat, lon) {
   return import_ngeohash.default.encode(lat, lon, 8);
 }
@@ -903,27 +1063,27 @@ function posFromHash(hash) {
   const { latitude: lat, longitude: lon } = import_ngeohash.default.decode(hash);
   return [lat, lon];
 }
-function haversineMiles(a, b) {
+function haversineMiles(a2, b2) {
   const R = 3958.8;
   const toRad = (deg) => deg * Math.PI / 180;
-  const [lat1, lon1] = a;
-  const [lat2, lon2] = b;
+  const [lat1, lon1] = a2;
+  const [lat2, lon2] = b2;
   const dLat = toRad(lat2 - lat1);
   const dLon = toRad(lon2 - lon1);
-  const h = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
-  return 2 * R * Math.asin(Math.sqrt(h));
+  const h2 = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h2));
 }
 var centerPos = [47.7776, -122.4247];
 var maxDistanceMiles = 60;
-function isValidLocation(p) {
-  const [lat, lon] = p;
+function isValidLocation(p2) {
+  const [lat, lon] = p2;
   if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
     return false;
   }
-  return haversineMiles(centerPos, p) < maxDistanceMiles;
+  return haversineMiles(centerPos, p2) < maxDistanceMiles;
 }
-function roundToFourPlaces(n) {
-  return Math.round(n * 1e4) / 1e4;
+function roundToFourPlaces(n2) {
+  return Math.round(n2 * 1e4) / 1e4;
 }
 function parseLocation(latStr, lonStr) {
   let lat = parseFloat(latStr);
@@ -950,14 +1110,14 @@ function pushMap(map, key, value) {
     map.set(key, [value]);
 }
 function getOrAdd(map, key, value) {
-  const v = map.get(key);
-  if (v) return v;
+  const v2 = map.get(key);
+  if (v2) return v2;
   map.set(key, value);
   return value;
 }
 function sigmoid(value, scale = 0.25, center = 0) {
-  const g = scale * (value - center);
-  return 1 / (1 + Math.exp(-g));
+  const g2 = scale * (value - center);
+  return 1 / (1 + Math.exp(-g2));
 }
 var TIME_TRUNCATION = 1e5;
 function truncateTime(time) {
@@ -983,18 +1143,23 @@ async function retry(func, maxRetries = 5, retryDelayMs = 500) {
     }
   }
 }
-function definedOr(fn, a, b) {
-  if (a != null && b != null)
-    return fn(a, b);
-  if (a == null && b == null)
+function definedOr(fn, a2, b2) {
+  if (a2 != null && b2 != null)
+    return fn(a2, b2);
+  if (a2 == null && b2 == null)
     return null;
-  return a != null ? a : b;
+  return a2 != null ? a2 : b2;
 }
-function or(a, b) {
-  return a || b;
+function or(a2, b2) {
+  return a2 || b2;
 }
-function and(a, b) {
-  return a && b;
+function and(a2, b2) {
+  return a2 && b2;
+}
+function fadeColor(color, amount) {
+  const c2 = w(color);
+  const v2 = c2.toHsv().v;
+  return c2.desaturate(amount).lighten(amount * (1 - v2 / 255)).toHex();
 }
 var export_aes = import_aes_js.default;
 var export_geo = import_ngeohash.default;
@@ -1005,6 +1170,7 @@ export {
   centerPos,
   coverageKey,
   definedOr,
+  fadeColor,
   fromTruncatedTime,
   export_geo as geo,
   getOrAdd,

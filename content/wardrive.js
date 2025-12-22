@@ -9,6 +9,7 @@ import {
   aes,
   ageInDays,
   centerPos,
+  fadeColor,
   geo,
   isValidLocation,
   maxDistanceMiles,
@@ -67,7 +68,8 @@ const currentLocMarker = L.circleMarker([0, 0], {
   fillColor: "#69DBFE",
   fillOpacity: .9,
   className: "marker-shadow",
-  pane: "tooltipPane"
+  pane: "tooltipPane",
+  interactive: false
 }).addTo(map);
 
 // Max radius circle.
@@ -158,8 +160,10 @@ function mergeCoverage(id, value) {
     return;
   }
 
+  // o is 0|1 for "observed" -- prefer observed.
   // h is 0|1 for "heard" -- prefer heard.
   // a is "age in days" -- prefer newest.
+  prev.o = Math.max(value.o, prev.o);
   prev.h = Math.max(value.h, prev.h);
   prev.a = Math.min(value.a, prev.a);
 }
@@ -179,11 +183,18 @@ async function refreshCoverage(tileId = null) {
 }
 
 function getCoverageBoxMarker(tileId, info) {
+  function getMarkerColor(info) {
+    if (info.o)
+      return '#398821' // Observed - Green
+    if (info.h)
+      return '#FEAA2C' // Repeated - Orange
+    return '#E04748' // Miss - Red
+  }
+
   const [minLat, minLon, maxLat, maxLon] = geo.decode_bbox(tileId);
-  const color = (info.h ? "#398821" : "#E04748");
-  const fillColor = info.a > refreshTileAge
-    ? (info.h ? "#9ED2A1" : "#E4B8A9")  // Old
-    : (info.h ? "#398821" : "#E04748"); // Fresh
+  const color = getMarkerColor(info);
+  const fresh = info.a <= refreshTileAge;
+  const fillColor = fresh ? color : fadeColor(color, .4);
 
   const style = {
     color: color,
@@ -191,7 +202,8 @@ function getCoverageBoxMarker(tileId, info) {
     weight: 1,
     fillColor: fillColor,
     fillOpacity: 0.6,
-    pane: "overlayPane"
+    pane: "overlayPane",
+    interactive: false
   };
   return L.rectangle([[minLat, minLon], [maxLat, maxLon]], style);
 }
@@ -259,9 +271,9 @@ function addPingHistory(ping) {
 
 function addPingMarker(ping) {
   function getPingColor(p) {
-    if (p.heard === true)
+    if (p.observed === true)
       return '#398821' // Observed - Green
-    if (p.rpt)
+    if (p.heard == true)
       return '#FEAA2C' // Repeated - Orange
     if (p.heard === false)
       return '#E04748' // Miss - Red
@@ -276,7 +288,8 @@ function addPingMarker(ping) {
     fillColor: getPingColor(ping),
     fillOpacity: 1,
     pane: "markerPane",
-    className: "marker-shadow"
+    className: "marker-shadow",
+    interactive: false
   });
   pingLayer.addLayer(pingMarker);
 }
@@ -587,7 +600,8 @@ async function sendPing({ auto = false } = {}) {
 
   // Update the tile state immediately.
   // Setting "age" to the cutoff so it stops getting pinged.
-  mergeCoverage(tileId, { h: 0, a: refreshTileAge });
+  const heard = repeat?.repeater !== undefined;
+  mergeCoverage(tileId, { o: 0, h: heard ? 1 : 0, a: refreshTileAge });
 
   // Queue fetching the sample from the service to update the UI.
   // The mesh+MQTT+service can be pretty slow so give it a few seconds to process.
@@ -595,15 +609,14 @@ async function sendPing({ auto = false } = {}) {
     const sample = await getSample(sampleId);
     const ping = { hash: sampleId };
 
-    if (repeat) {
-      ping.rpt = repeat.repeater;
-    }
-
     if (sample) {
-      ping.heard = sample.path?.length > 0;
-      const age = ageInDays(sample.time);
-      const h = ping.heard ? 1 : 0;
-      mergeCoverage(tileId, { h: h, a: age });
+      ping.observed = sample.observed;
+      ping.heard = sample.path.length > 0;
+      mergeCoverage(tileId, {
+        o: ping.observed ? 1 : 0,
+        h: ping.heard ? 1 : 0,
+        a: ageInDays(sample.time)
+      });
     }
 
     addCoverageBox(tileId);
