@@ -1159,10 +1159,12 @@ function and(a2, b2) {
 function clamp(val, min, max) {
   return Math.max(min, Math.min(val, max));
 }
-function lerp(val, min, max) {
+function lerp(val, min, max, outMin = 0, outMax = 1) {
   const range = max - min;
   const delta = val - min;
-  return clamp(delta / range, 0, 1);
+  const outRange = outMax - outMin;
+  const percentage = clamp(delta / range, 0, 1);
+  return outMin + outRange * percentage;
 }
 function fadeColor(color, amount) {
   const c2 = w(color);

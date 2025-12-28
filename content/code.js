@@ -284,21 +284,21 @@ function shortDateStr(d) {
   });
 }
 
-// Gets a color for a value [0, 1]
+// Gets a color for a value [0, 1].
 function getColorForValue(v) {
-  if (v > .875) return "#E4572E";  // red-orange
-  if (v > .75) return "#F18F01";  // orange
-  if (v > .625) return "#F4B63D";  // amber
-  if (v > .5) return "#F1E04F";  // yellow
-  if (v > .375) return "#2EC7D3";  // cyan
-  if (v > .25) return "#2F8EDB";  // azure
-  if (v > .125) return "#3F5CCB";  // royal blue
-  return "#2B2D9F";                // indigo
+  if (v > .875) return "#2B2D9F"; // indigo
+  if (v > .75) return "#3F5CCB";  // royal blue
+  if (v > .625) return "#2F8EDB"; // azure
+  if (v > .5) return "#2EC7D3";   // cyan
+  if (v > .375) return "#F1E04F"; // yellow
+  if (v > .25) return "#F4B63D";  // amber
+  if (v > .125) return "#F18F01"; // orange
+  return "#E4572E";               // red-orange
 }
 
 function getCoverageStyle(coverage) {
-  const obsColor = '#398821'; // Observed - Green
-  const hrdColor = '#FEAA2C'; // Heard - Orange
+  const obsColor = '#398821';  // Observed - Green
+  const hrdColor = '#FEAA2C';  // Heard - Orange
   const missColor = '#E04748'; // Lost - Red
 
   const color =
@@ -358,13 +358,12 @@ function getCoverageStyle(coverage) {
     }
 
     case 'notRepeated': {
-      const sum = coverage.obs * 3 + coverage.hrd;
-      if (sum > 0) {
-        const heardRatio = coverage.hrd / sum;
+      const diff = coverage.hrd - coverage.obs;
+      if (diff > 0) {
         if (useColorScale) {
-          style.color = getColorForValue(heardRatio);
+          style.color = getColorForValue(lerp(diff, 1, 8));
         } else {
-          style.fillOpacity = clamp(heardRatio, 0.1, 0.9);
+          style.fillOpacity = lerp(diff, 1, 8, .4, .9);
         }
       } else {
         style.opacity = 0.1;
