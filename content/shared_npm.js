@@ -40,7 +40,7 @@ export function haversineMiles(a, b) {
 
 // The center position to use for point filtering.
 export const centerPos = [41.613889, -72.7725]; // Connecticut
-export const maxDistanceMiles = 60;
+export const maxDistanceMiles = 67;
 
 export function isValidLocation(p) {
   const [lat, lon] = p;
