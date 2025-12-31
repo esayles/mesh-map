@@ -1,28 +1,16 @@
 {
-  "mqtt_host": "<mqtt-service-host>",
+  "mqtt_host": "https://analyzer.letsmesh.net",
   "mqtt_port": 443,
   "mqtt_username": "<USERNAME>",
   "mqtt_password": "<PASSWORD>",
-  "mqtt_topic": "meshcore/SEA/+/packets",
+  "mqtt_topic": "meshcore/BDL/+/packets",
 
-  "service_host": "https://<service-host>.pages.dev",
-  "center_position": [47.6205, -122.3494],
-  "valid_dist": 150,
+  "service_host": "https://ct-mesh-map.pages.dev",
+  "center_position": [41.613889, -72.7725],
+  "valid_dist": 67,
 
   "channel_hash": "e0",
   "channel_secret": "4076c315c1ef385fa93f066027320fe5",
 
-  "watched_observers": [
-    "Discovery MQTT",
-    "N7JMV-NEW-RP",
-    "N7JMV/WA7LAW-EVERETT-RP",
-    "Powerline Trail",
-    "PugetMesh Haystack",
-    "Red Repeater",
-    "W7ITL-PTDefiance-IKOKA",
-    "WW7STR/PugetMesh Cougar",
-    "Woodward Repeater",
-    "Yaletown Repeater",
-    "YVR//Seafair"
-  ]
+  "watched_observers": ["K1HFZ Base 2", "KO4TSM MQTT Upload", "🐌 base"]
 }

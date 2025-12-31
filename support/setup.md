@@ -106,18 +106,20 @@ VM somewhere get a python environment set up. Use systemd to set the scripts to 
 services that start on boot. The systemd files are there for reference. Once you have
 the services running, use journalctl to watch the logs.
 
-### Files to modify
-* config.json has per-instance config that you need to modify.
-  * mqtt_host - where the MQTT client will connect.
-  * mqtt user/pass - creds for the MQTT client to use to connect to the host.
-  * service_host - your Pages app host.
-  * center_pos - the center of your map.
-  * valid_dist - radius in miles considered "in" your region.
-  * channel hash/secret - the mesh channel to read from. "#wardrive" by default and feel free to use that.
-  * watched_observers - the repeater names of the observers that are considered
-  "official". Remember, the point is to pick observers that indicate a message was
-  shared with your whole region. If an observer is off in its own little corner, the
-  map would show a green tile for an area that wouldn't reach the whole mesh.
+### Configuration
+Configuration for the MQTT helper scripts is now read from environment variables
+instead of a local `config.json` file. The support/mqtt scripts accept the
+following env vars (names are case-sensitive):
+
+- `MQTT_HOST`, `MQTT_PORT`, `MQTT_USERNAME`, `MQTT_PASSWORD`, `MQTT_TOPIC`
+- `SERVICE_HOST` (your Pages app host)
+- `CENTER_POSITION` (JSON array or comma-separated lat,lon)
+- `VALID_DIST` (miles)
+- `CHANNEL_HASH`, `CHANNEL_SECRET`
+- `WATCHED_OBSERVERS` (JSON array or comma-separated list)
+
+These are suitable to set as Cloudflare Pages environment variables or system
+environment variables on the host running the MQTT scripts.
 
 ### Python Setup
 1) Set up a virtual environment `python -m venv .` and activate it `source ./bin/activate`

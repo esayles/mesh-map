@@ -1,6 +1,9 @@
 import requests
+import os
 
-HOST = "https://<service-host>.pages.dev"
+# Prefer SERVICE_HOST environment variable (Cloudflare Pages) but fall back
+# to the previous placeholder if not set.
+HOST = os.environ.get('SERVICE_HOST', 'https://ct-mesh-map.pages.dev')
 
 def consolidate():
   try:
