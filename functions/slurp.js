@@ -11,7 +11,8 @@ export async function onRequest(context) {
   if (url.hostname !== "localhost")
     return new Response("Only works in Wrangler.");
 
-  const resp = await fetch("https://ct-mesh-map.pages.dev/get-nodes");
+  const serviceHost = context.env.SERVICE_HOST || "https://ct-mesh-map.pages.dev";
+  const resp = await fetch(`${serviceHost}/get-nodes`);
   const data = await resp.json();
 
   const sampleInsertStmts = data.samples.map((s) => {

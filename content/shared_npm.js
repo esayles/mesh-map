@@ -39,8 +39,29 @@ export function haversineMiles(a, b) {
 }
 
 // The center position to use for point filtering.
-export const centerPos = [41.613889, -72.7725]; // Connecticut
-export const maxDistanceMiles = 67;
+// Read build-time env vars if available (used when bundling via esbuild/wrangler).
+function _parseCenterEnv() {
+  try {
+    if (typeof process !== 'undefined' && process.env && process.env.CENTER_POSITION) {
+      const v = process.env.CENTER_POSITION;
+      try { return JSON.parse(v); } catch (e) { return v.split(',').map(Number); }
+    }
+  } catch (e) {}
+  return [41.613889, -72.7725];
+}
+
+function _parseMaxDistEnv() {
+  try {
+    if (typeof process !== 'undefined' && process.env) {
+      const v = process.env.VALID_DIST || process.env.MAX_DISTANCE_MILES || process.env.VALID_DISTANCE;
+      if (v) return Number(v);
+    }
+  } catch (e) {}
+  return 67;
+}
+
+export const centerPos = _parseCenterEnv();
+export const maxDistanceMiles = _parseMaxDistEnv();
 
 export function isValidLocation(p) {
   const [lat, lon] = p;

@@ -4,6 +4,18 @@
   "pages_build_output_dir": ".",
   "compatibility_date": "2025-11-05",
   "compatibility_flags": ["nodejs_compat"],
+  "vars": {
+    "SERVICE_HOST": "https://ct-mesh-map.pages.dev",
+    "MQTT_HOST": "analyzer.letsmesh.net",
+    "MQTT_PORT": "443",
+    "MQTT_USERNAME": "",
+    "MQTT_TOPIC": "meshcore/BDL/+/packets",
+    "CENTER_POSITION": "[41.613889,-72.7725]",
+    "VALID_DIST": "67",
+    "CHANNEL_HASH": "e0",
+    "CHANNEL_SECRET": "4076c315c1ef385fa93f066027320fe5",
+    "WATCHED_OBSERVERS": "[\"K1HFZ Base 2\",\"KO4TSM MQTT Upload\",\"🐌 base\"]"
+  },
   "d1_databases": [
     {
       "binding": "DB",
