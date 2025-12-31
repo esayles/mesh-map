@@ -1073,8 +1073,8 @@ function haversineMiles(a2, b2) {
   const h2 = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
   return 2 * R * Math.asin(Math.sqrt(h2));
 }
-var centerPos = [47.6205, -122.3494];
-var maxDistanceMiles = 150;
+var centerPos = [41.613889, -72.7725];
+var maxDistanceMiles = 60;
 function isValidLocation(p2) {
   const [lat, lon] = p2;
   if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
@@ -1110,10 +1110,8 @@ function ageInDays(time) {
 }
 function pushMap(map, key, value) {
   const items = map.get(key);
-  if (items)
-    items.push(value);
-  else
-    map.set(key, [value]);
+  if (items) items.push(value);
+  else map.set(key, [value]);
 }
 function getOrAdd(map, key, value) {
   const v2 = map.get(key);
@@ -1143,17 +1141,14 @@ async function retry(func, maxRetries = 5, retryDelayMs = 500) {
       attempt++;
       if (attempt >= maxRetries)
         throw new Error(`Exceeded max retries. ${err}`);
-      else
-        console.log(`Attempt ${attempt} failed with ${err}`);
+      else console.log(`Attempt ${attempt} failed with ${err}`);
       await sleep(retryDelayMs * attempt);
     }
   }
 }
 function definedOr(fn, a2, b2) {
-  if (a2 != null && b2 != null)
-    return fn(a2, b2);
-  if (a2 == null && b2 == null)
-    return null;
+  if (a2 != null && b2 != null) return fn(a2, b2);
+  if (a2 == null && b2 == null) return null;
   return a2 != null ? a2 : b2;
 }
 function or(a2, b2) {
@@ -1180,8 +1175,7 @@ function fadeColor(color, amount) {
 function toHex(num) {
   if (num == null) return num;
   let numStr = num.toString(16);
-  if (numStr.length % 2)
-    numStr = numStr.padStart(numStr.length + 1, "0");
+  if (numStr.length % 2) numStr = numStr.padStart(numStr.length + 1, "0");
   return numStr;
 }
 var export_aes = import_aes_js.default;
