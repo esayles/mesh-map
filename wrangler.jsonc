@@ -1,16 +1,14 @@
 {
-    "$schema": "./node_modules/wrangler/config-schema.json",
-    "name": "mesh-map",
-    "pages_build_output_dir": ".",
-    "compatibility_date": "2025-11-05",
-    "compatibility_flags": [
-        "nodejs_compat"
-    ],
-    "d1_databases": [
-        {
-            "binding": "DB",
-            "database_name": "mesh-map",
-            "database_id": "60046b37-9e23-4af3-879d-232d4663032d"
-        }
-    ]
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "mesh-map",
+  "pages_build_output_dir": ".",
+  "compatibility_date": "2025-11-05",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "mesh-map",
+      "database_id": "7d29540d-9e48-4ae3-90f5-919614f67813"
+    }
+  ]
 }
