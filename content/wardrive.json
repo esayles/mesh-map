@@ -1,7 +1,7 @@
 {
-  "name": "MeshCore Wardrive",
+  "name": "CT MeshCore Wardrive",
   "short_name": "MC Map",
-  "start_url": "/waredrive.html",
+  "start_url": "/wardrive.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
