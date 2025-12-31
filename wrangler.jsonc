@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "mesh-map",
+  "name": "ct-mesh-map",
   "pages_build_output_dir": ".",
   "compatibility_date": "2025-11-05",
   "compatibility_flags": ["nodejs_compat"],
