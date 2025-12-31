@@ -262,7 +262,7 @@ def on_message(client, userdata, msg):
     if (packet_hash is None or packet_hash in SEEN): return
 
     # Is this one of the "authoritative" observers in the region?
-    if data["origin"] not in CONFIG["watched_observers"]: return
+    if data["origin"] not in WATCHED_OBSERVERS: return
 
     # Is this an advert (4) or group message (5)?
     packet_type = data["packet_type"]
