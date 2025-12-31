@@ -1,8 +1,8 @@
-import geo from 'ngeohash';
-import aes from 'aes-js';
-import { colord } from 'colord';
+import geo from "ngeohash";
+import aes from "aes-js";
+import { colord } from "colord";
 
-export { aes, geo };  // export APIs.
+export { aes, geo }; // export APIs.
 
 // Generates 8 char geohash for the given lat/lon.
 export function geohash8(lat, lon) {
@@ -23,7 +23,7 @@ export function posFromHash(geohash) {
 // Haversine distance between two [lat, lon] points, in miles.
 export function haversineMiles(a, b) {
   const R = 3958.8; // Earth radius in miles
-  const toRad = deg => deg * Math.PI / 180;
+  const toRad = (deg) => (deg * Math.PI) / 180;
 
   const [lat1, lon1] = a;
   const [lat2, lon2] = b;
@@ -31,16 +31,16 @@ export function haversineMiles(a, b) {
   const dLat = toRad(lat2 - lat1);
   const dLon = toRad(lon2 - lon1);
 
-  const h = Math.sin(dLat / 2) ** 2 +
-    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-    Math.sin(dLon / 2) ** 2;
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
 
   return 2 * R * Math.asin(Math.sqrt(h));
 }
 
 // The center position to use for point filtering.
-export const centerPos = [47.6205, -122.3494];
-export const maxDistanceMiles = 150;
+export const centerPos = [41.613889, -72.7725]; // Connecticut
+export const maxDistanceMiles = 60;
 
 export function isValidLocation(p) {
   const [lat, lon] = p;
@@ -81,7 +81,7 @@ export function parseLocation(latStr, lonStr) {
   return [lat, lon];
 }
 
-export const dayInMillis = 24 * 60 * 60 * 1000; 
+export const dayInMillis = 24 * 60 * 60 * 1000;
 
 export function ageInDays(time) {
   return (Date.now() - new Date(time)) / dayInMillis;
@@ -90,22 +90,20 @@ export function ageInDays(time) {
 // Adds the value to a list associated with key.
 export function pushMap(map, key, value) {
   const items = map.get(key);
-  if (items)
-    items.push(value);
-  else
-    map.set(key, [value]);
+  if (items) items.push(value);
+  else map.set(key, [value]);
 }
 
 export function getOrAdd(map, key, value) {
   const v = map.get(key);
   if (v) return v;
-  
+
   map.set(key, value);
   return value;
 }
 
 export function sigmoid(value, scale = 0.25, center = 0) {
-  const g = scale * (value - center)
+  const g = scale * (value - center);
   return 1 / (1 + Math.exp(-g));
 }
 
@@ -122,7 +120,7 @@ export function fromTruncatedTime(truncatedTime) {
 
 export async function retry(func, maxRetries = 5, retryDelayMs = 500) {
   let attempt = 0;
-  const sleep = ms => new Promise(res => setTimeout(res, ms));
+  const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 
   while (true) {
     try {
@@ -133,25 +131,26 @@ export async function retry(func, maxRetries = 5, retryDelayMs = 500) {
 
       if (attempt >= maxRetries)
         throw new Error(`Exceeded max retries. ${err}`);
-      else
-        console.log(`Attempt ${attempt} failed with ${err}`);
-        await sleep(retryDelayMs * attempt);
+      else console.log(`Attempt ${attempt} failed with ${err}`);
+      await sleep(retryDelayMs * attempt);
     }
   }
 }
 
 export function definedOr(fn, a, b) {
-  if (a != null && b != null)
-    return fn(a, b);
+  if (a != null && b != null) return fn(a, b);
 
-  if (a == null && b == null)
-    return null;
+  if (a == null && b == null) return null;
 
   return a != null ? a : b;
 }
 
-export function or(a, b) { return a || b; }
-export function and(a, b) {return  a && b; }
+export function or(a, b) {
+  return a || b;
+}
+export function and(a, b) {
+  return a && b;
+}
 
 export function clamp(val, min, max) {
   return Math.max(min, Math.min(val, max));
@@ -162,20 +161,22 @@ export function lerp(val, min, max, outMin = 0, outMax = 1) {
   const delta = val - min;
   const outRange = outMax - outMin;
   const percentage = clamp(delta / range, 0, 1);
-  return outMin + (outRange * percentage);
+  return outMin + outRange * percentage;
 }
 
 export function fadeColor(color, amount) {
   const c = colord(color);
   const v = c.toHsv().v;
-  return c.desaturate(amount).lighten(amount * (1 - (v / 255))).toHex();
+  return c
+    .desaturate(amount)
+    .lighten(amount * (1 - v / 255))
+    .toHex();
 }
 
 export function toHex(num) {
   if (num == null) return num; // Nullish
 
   let numStr = num.toString(16);
-  if (numStr.length % 2)
-    numStr = numStr.padStart(numStr.length + 1, "0");
+  if (numStr.length % 2) numStr = numStr.padStart(numStr.length + 1, "0");
   return numStr;
 }
