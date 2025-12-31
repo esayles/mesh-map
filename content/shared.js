@@ -1073,8 +1073,32 @@ function haversineMiles(a2, b2) {
   const h2 = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
   return 2 * R * Math.asin(Math.sqrt(h2));
 }
-var centerPos = [41.613889, -72.7725];
-var maxDistanceMiles = 60;
+function _parseCenterEnv() {
+  try {
+    if (typeof process !== "undefined" && process.env && process.env.CENTER_POSITION) {
+      const v2 = process.env.CENTER_POSITION;
+      try {
+        return JSON.parse(v2);
+      } catch (e2) {
+        return v2.split(",").map(Number);
+      }
+    }
+  } catch (e2) {
+  }
+  return [41.613889, -72.7725];
+}
+function _parseMaxDistEnv() {
+  try {
+    if (typeof process !== "undefined" && process.env) {
+      const v2 = process.env.VALID_DIST || process.env.MAX_DISTANCE_MILES || process.env.VALID_DISTANCE;
+      if (v2) return Number(v2);
+    }
+  } catch (e2) {
+  }
+  return 67;
+}
+var centerPos = _parseCenterEnv();
+var maxDistanceMiles = _parseMaxDistEnv();
 function isValidLocation(p2) {
   const [lat, lon] = p2;
   if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
