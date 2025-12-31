@@ -1,5 +1,5 @@
 {
-  "mqtt_host": "https://analyzer.letsmesh.net",
+  "mqtt_host": "mqtt-us-v1.letsmesh.net",
   "mqtt_port": 443,
   "mqtt_username": "<USERNAME>",
   "mqtt_password": "<PASSWORD>",
