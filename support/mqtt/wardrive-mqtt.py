@@ -46,7 +46,7 @@ ADD_REPEATER_URL = "/put-repeater"
 ADD_SAMPLE_URL = "/put-sample"
 
 # MQTT settings
-MQTT_HOST = os.environ.get('MQTT_HOST', os.environ.get('MQTT_BROKER', 'analyzer.letsmesh.net'))
+MQTT_HOST = os.environ.get('MQTT_HOST', os.environ.get('MQTT_BROKER', 'mqtt-us-v1.letsmesh.net'))
 MQTT_PORT = int(os.environ.get('MQTT_PORT', 443))
 MQTT_USERNAME = os.environ.get('MQTT_USERNAME', None)
 MQTT_PASSWORD = os.environ.get('MQTT_PASSWORD', None)
