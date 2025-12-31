@@ -8,7 +8,7 @@
     "SERVICE_HOST": "https://ct-mesh-map.pages.dev",
     "MQTT_HOST": "analyzer.letsmesh.net",
     "MQTT_PORT": "443",
-    "MQTT_USERNAME": "",
+    "MQTT_USERNAME": "saylese",
     "MQTT_TOPIC": "meshcore/BDL/+/packets",
     "CENTER_POSITION": "[41.613889,-72.7725]",
     "VALID_DIST": "69",
