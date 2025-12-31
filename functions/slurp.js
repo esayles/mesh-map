@@ -1,45 +1,45 @@
-import * as util from '../content/shared.js';
+import * as util from "../content/shared.js";
 
 // Pull all the live data into the local emulator.
 export async function onRequest(context) {
   const url = new URL(context.request.url);
   const result = {
     imported_samples: 0,
-    imported_repeaters: 0
+    imported_repeaters: 0,
   };
 
   if (url.hostname !== "localhost")
     return new Response("Only works in Wrangler.");
 
-  const resp = await fetch("https://mesh-map.pages.dev/get-nodes");
+  const resp = await fetch("https://ct-mesh-map.pages.dev/get-nodes");
   const data = await resp.json();
 
-  const sampleInsertStmts = data.samples.map(s => {
-    return context.env.DB
-      .prepare(`
+  const sampleInsertStmts = data.samples.map((s) => {
+    return context.env.DB.prepare(
+      `
         INSERT OR IGNORE INTO samples
           (hash, time, rssi, snr, observed, repeaters)
-        VALUES (?, ?, ?, ?, ?, ?)`)
-      .bind(
-        s.id,
-        util.fromTruncatedTime(s.time),
-        s.rssi ?? null,
-        s.snr ?? null,
-        s.obs ? 1 : 0,
-        JSON.stringify(s.path ?? [])
-      );
+        VALUES (?, ?, ?, ?, ?, ?)`
+    ).bind(
+      s.id,
+      util.fromTruncatedTime(s.time),
+      s.rssi ?? null,
+      s.snr ?? null,
+      s.obs ? 1 : 0,
+      JSON.stringify(s.path ?? [])
+    );
   });
   await context.env.DB.batch(sampleInsertStmts);
   result.imported_samples = sampleInsertStmts.length;
 
-  const repeaterInsertStmts = data.repeaters.map(r => {
-    return context.env.DB
-    .prepare(`
+  const repeaterInsertStmts = data.repeaters.map((r) => {
+    return context.env.DB.prepare(
+      `
       INSERT OR REPLACE INTO repeaters
         (id, hash, time, name, elevation)
       VALUES (?, ?, ?, ?, ?)
-    `)
-    .bind(
+    `
+    ).bind(
       r.id,
       r.hash,
       util.fromTruncatedTime(r.time),
