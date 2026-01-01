@@ -94,7 +94,7 @@ Add a `vars` block to `wrangler.jsonc` (example):
 ```
     "vars": {
         "SERVICE_HOST": "https://ct-mesh-map.pages.dev",
-        "MQTT_HOST": "analyzer.letsmesh.net",
+        "MQTT_HOST": "mqtt-us-v1.letsmesh.net",
         "MQTT_PORT": "443",
         "MQTT_USERNAME": "",
         "MQTT_TOPIC": "meshcore/BDL/+/packets",

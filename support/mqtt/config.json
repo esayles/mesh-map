@@ -1,5 +1,5 @@
 {
-  "mqtt_host": "mqtt-us-v1.letsmesh.net",
+  "mqtt_host": "ct-mqtt.vercel.app",
   "mqtt_port": 443,
   "mqtt_username": "<USERNAME>",
   "mqtt_password": "<PASSWORD>",

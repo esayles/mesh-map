@@ -46,7 +46,7 @@ ADD_REPEATER_URL = "/put-repeater"
 ADD_SAMPLE_URL = "/put-sample"
 
 # MQTT settings
-MQTT_HOST = os.environ.get('MQTT_HOST', os.environ.get('MQTT_BROKER', 'mqtt-us-v1.letsmesh.net'))
+MQTT_HOST = os.environ.get('MQTT_HOST', os.environ.get('MQTT_BROKER', 'ct-mqtt.vercel.app'))
 MQTT_PORT = int(os.environ.get('MQTT_PORT', 443))
 MQTT_USERNAME = os.environ.get('MQTT_USERNAME', None)
 MQTT_PASSWORD = os.environ.get('MQTT_PASSWORD', None)
@@ -312,7 +312,7 @@ def main():
     client.connect(MQTT_HOST, MQTT_PORT, 60)
     client.loop_forever()
   except Exception as e:
-    print(f"An error occurred: {e}")
+    print(f"An error occurred: {e.with_traceback}")
 
 
 if __name__ == "__main__":
