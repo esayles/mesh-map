@@ -28,6 +28,72 @@
     ></script>
 
     <style>
+      body {
+        background: var(--color-slate-900);
+      }
+
+      .stackedit__html {
+        background: var(--color-slate-800);
+        color: var(--color-slate-100);
+      }
+
+      h1 {
+        border-bottom: 2px solid var(--color-slate-700);
+      }
+
+      h1,
+      h2,
+      h3 {
+        color: var(--color-sky-300);
+      }
+
+      a {
+        color: var(--color-sky-300);
+        font-weight: var(--font-weight-medium);
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      code {
+        background: var(--color-slate-700);
+        color: var(--color-amber-300);
+        font-family: var(--font-mono);
+      }
+
+      ul {
+        list-style: disc;
+        padding-left: calc(var(--spacing) * 6);
+      }
+
+      li ul {
+        margin-top: calc(var(--spacing) * 1);
+      }
+
+      strong {
+        font-weight: var(--font-weight-semibold);
+        color: var(--color-amber-300);
+      }
+
+      .status-indicator {
+        display: inline-block;
+        padding: calc(var(--spacing) * 0.5) calc(var(--spacing) * 2);
+        border-radius: var(--radius-md);
+        font-size: var(--text-xs);
+        font-weight: var(--font-weight-medium);
+        margin: 0 calc(var(--spacing) * 0.5);
+      }
+
+      .warning-box {
+        background: color-mix(in srgb, var(--color-amber-600) 20%, transparent);
+        border-left: 4px solid var(--color-amber-600);
+      }
+
+      .info-box {
+        background: color-mix(in srgb, var(--color-sky-600) 20%, transparent);
+        border-left: 4px solid var(--color-sky-600);
+      }
       .leaflet-interactive.marker-shadow {
         filter: url(#marker-shadow);
       }
@@ -50,7 +116,7 @@
                 >Disconnected</span
               >
             </div>
-            <div id="deviceInfo" class="text-slate-400 text-xs"></div>
+            <div id="deviceInfo" class="text-slate-400 text-sm"></div>
           </div>
         </header>
 
@@ -91,7 +157,7 @@
           class="bg-slate-800/80 border border-slate-700 rounded-lg p-2 space-y-2 shadow-sm"
         >
           <!-- Send radio name consent -->
-          <div class="space-y-1 text-xs align-middle text-slate-300 mb-4">
+          <div class="space-y-1 text-sm align-middle text-slate-300 mb-4">
             <label class="flex gap-2">
               <input type="checkbox" id="sendRadioNameCB" />
               Send my radio name with pings (for leaderboard).
@@ -100,7 +166,7 @@
 
           <!-- Ignore Repeater -->
           <div class="space-y-1">
-            <div class="text-xs italic text-slate-400">
+            <div class="text-sm italic text-slate-400">
               If you're using a mobile repeater, ignore its id.
             </div>
             <div class="flex flex-wrap items-center gap-1">
@@ -110,8 +176,8 @@
               >
                 Set
               </button>
-              <label class="text-xs text-slate-300">Ignored Repeater Id</label>
-              <div id="ignoredRepeaterId" class="text-xs text-slate-400">
+              <label class="text-sm text-slate-300">Ignored Repeater ID</label>
+              <div id="ignoredRepeaterId" class="text-sm text-slate-400">
                 None
               </div>
             </div>
@@ -120,52 +186,278 @@
 
         <!-- Info -->
         <section>
-          <div class="text-xs italic text-slate-400">
-            Sends location to <span class="font-mono">#wardrive</span> to build
-            the <a class="underline" target="_blank" href="/">coverage map</a>.
-          </div>
-          <div class="text-xs italic text-slate-400">
-            <span>Requires Bluetooth &amp; Location permissions.</span>
-          </div>
-          <div class="text-xs italic text-slate-400">
-            <span>Must remain in foreground with screen on and unlocked.</span>
-          </div>
-          <div class="text-xs italic text-slate-400">
-            Requires
-            <a
-              class="underline"
-              target="_blank"
-              href="https://apps.apple.com/us/app/bluefy-web-ble-browser/id1492822055"
-              >Bluefy</a
-            >
-            on iOS.
-            <a
-              class="underline"
-              target="_blank"
-              href="https://play.google.com/store/apps/details?id=com.microsoft.emmx"
-              >Edge</a
-            >
-            or
-            <a
-              class="underline"
-              target="_blank"
-              href="https://play.google.com/store/apps/details?id=com.android.chrome"
-              >Chrome</a
-            >
-            on Android.
-          </div>
-          <div class="text-xs italic text-slate-400">
-            <span
-              >Only for
-              <a class="underline" target="_blank" href="https://ctmesh.org/"
-                >Connecticut Mesh</a
-              >.</span
-            >
-            <span
-              >See
-              <a class="underline" target="_blank" href="/howto">howto</a> for
-              more info.</span
-            >
+          <div
+            class="stackedit__html max-w-3xl p-4 shadow-sm"
+            style="margin-left: auto; margin-right: auto"
+          >
+            <h1 class="text-2xl font-semibold mb-4 pb-2">
+              Contributing to the MeshCore Coverage map
+            </h1>
+
+            <h2 class="text-xl font-semibold mb-2 mt-6">What is this?</h2>
+            <img
+              src="https://ct-mesh-map.pages.dev/content/hear-me.png"
+              alt="Can you hear me now?"
+              class="rounded-lg shadow mb-4"
+            />
+
+            <p class="mb-4 text-base">
+              The goal of this project is to map out "effective" coverage of the
+              Connecticut MeshCore mesh. The client app will already tell you
+              whether a repeater heard your message, but that doesn't really
+              tell you much. Did it actually go anywhere? Did anyone else
+              receive it? By using MQTT data from prominent observer nodes, this
+              helps visualize that places where a sent message will be widely
+              received.
+            </p>
+
+            <p class="mb-4 text-base">
+              <a href="https://ct-mesh-map.pages.dev/">The coverage map</a> is a
+              crowd-sourced visualization of repeater coverage in the CT
+              MeshCore mesh.
+            </p>
+
+            <p class="mb-2 text-base">The main map has a few features:</p>
+            <ul class="space-y-2 mb-4">
+              <li>
+                Dots indicate "pings" or "samples" from wardrivers.
+                <ul class="space-y-1">
+                  <li>
+                    Pings are visible on the map for 1 day before being grouped
+                    into a "coverage" tile (a box).
+                  </li>
+                  <li>
+                    <span class="status-indicator bg-emerald-600"
+                      >Green dot</span
+                    >
+                    - a ping was "observed" (by MQTT) at that location.
+                  </li>
+                  <li>
+                    <span class="status-indicator bg-amber-600"
+                      >Orange dot</span
+                    >
+                    - a repeater was heard but the ping was not observed.
+                  </li>
+                  <li>
+                    <span class="status-indicator bg-red-600">Red dot</span> - a
+                    ping was lost.
+                  </li>
+                </ul>
+              </li>
+              <li>
+                Coverage tiles hold stats for the last 15 "groupings" of pings.
+                <ul class="space-y-1">
+                  <li>
+                    <span class="status-indicator bg-emerald-600"
+                      >Green box</span
+                    >
+                    - the mesh was reachable in this region.
+                  </li>
+                  <li>
+                    <span class="status-indicator bg-amber-600"
+                      >Orange box</span
+                    >
+                    - the mesh was not reachable, but pings were heard in this
+                    region.
+                  </li>
+                  <li>
+                    <span class="status-indicator bg-red-600">Red box</span> -
+                    the mesh was not reachable in this region.
+                  </li>
+                </ul>
+              </li>
+              <li>
+                Dashed line - links a green dot or box to its 1st hop
+                repeater(s).
+              </li>
+              <li>
+                <span class="status-indicator bg-sky-600">Blue dot</span> -
+                repeater with an advert in the past 1 day.
+              </li>
+              <li>
+                <span class="status-indicator bg-zinc-600">Light gray dot</span>
+                - repeater with an advert in the past 5 days.
+              </li>
+              <li>
+                <span class="status-indicator bg-slate-900">Dark gray dot</span>
+                - repeater without an advert in the past 5 days.
+              </li>
+            </ul>
+
+            <h2 class="text-xl font-semibold mb-2 mt-6">How it works</h2>
+            <p class="mb-4 text-base">
+              You send your location to
+              <code class="px-2 py-1.5 rounded-md text-sm">#wardrive</code> in
+              the format "lat.xxxx lon.yyyy". If your location is received, a
+              new point is added to the map indicating you can reach the mesh at
+              that spot. If you want to also log places where you can't reach
+              the mesh, there's a helpful web app you can run on your phone to
+              automate the process. To be considered reachable, your message
+              repeats have to be observed by one of the following MQTT
+              observers.
+            </p>
+
+            <p class="mb-4 text-base">
+              WA7JNJ Radio from PugetMesh made a nice
+              <a href="https://www.youtube.com/watch?v=NhpzdhJeT2w"
+                >video overview</a
+              >
+              of the project and how to get started.
+            </p>
+
+            <h2 class="text-xl font-semibold mb-2 mt-6">
+              How you can contribute
+            </h2>
+            <p class="mb-4 text-base">
+              The easiest way to contribute is to use this app. It allows you to
+              connect to your companion radio and send ping messages
+              automatically. It also sends your ping location to the service so
+              that misses are also automatically logged. You can send single
+              pings or enable 'auto mode' which will send a ping when you enter
+              a coverage tile that hasn't been updated recently. The app will
+              also listen for a repeat and send the repeater and radio stats to
+              the service. This allows you to find repeaters that aren't getting
+              repeated by the larger mesh.
+            </p>
+
+            <h3 class="text-lg font-semibold mb-2 mt-4">
+              Using the Wardrive app
+            </h3>
+            <p class="mb-4 text-base">
+              It mostly "just works", but there are few things to know when
+              using the app.
+            </p>
+
+            <div class="warning-box p-4 rounded-lg mb-4">
+              <p class="text-base">
+                <strong
+                  >If you're using a mobile repeater (car-peater), use the
+                  "ignore id" function to exclude it from the path. Otherwise
+                  coverage data will be inaccurate.</strong
+                >
+              </p>
+              <ul class="space-y-1 mt-2">
+                <li>
+                  Radio statistics (SNR/RSSI) cannot be collected if you're
+                  using a mobile repeater.
+                </li>
+              </ul>
+            </div>
+
+            <ul class="space-y-2 mb-4">
+              <li>
+                You must allow access to Bluetooth and Location in your browser.
+              </li>
+              <li>
+                Your companion radio must add the
+                <code class="px-2 py-1.5 rounded-md text-sm">#wardrive</code>
+                channel. The app will help with that.
+              </li>
+              <li>
+                It does not work in Safari or most vendor-modded Android
+                browsers.
+                <ul class="space-y-1">
+                  <li>On Macos use Edge or Chrome.</li>
+                  <li>
+                    On iOS, use the
+                    <a
+                      href="https://apps.apple.com/us/app/bluefy-web-ble-browser/id1492822055"
+                      >Bluefy app</a
+                    >
+                  </li>
+                  <li>
+                    On Android use
+                    <a
+                      href="https://play.google.com/store/apps/details?id=com.microsoft.emmx"
+                      >Edge</a
+                    >
+                    or
+                    <a
+                      href="https://play.google.com/store/apps/details?id=com.android.chrome"
+                      >Chrome</a
+                    >.
+                  </li>
+                </ul>
+              </li>
+              <li>
+                You have to disconnect from the MeshCore app in order to connect
+                to your radio. BLE only allows one connection.
+              </li>
+              <li>
+                If you're using auto mode, the web page must be in the
+                foreground and the screen unlocked.
+                <ul class="space-y-1">
+                  <li>
+                    It tries to keep the screen alive while running, but I've
+                    only tested on iOS.
+                  </li>
+                </ul>
+              </li>
+              <li>
+                Auto mode checks every 10 seconds if you're in a coverage tile
+                that needs an update and only sends a ping if needed (hasn't
+                already been pinged in the past day).
+              </li>
+              <li>
+                Don't spam the mesh or the service. The mesh is a shared
+                resource – be judicious.
+              </li>
+            </ul>
+
+            <h3 class="text-lg font-semibold mb-2 mt-4">Passive Mode</h3>
+            <p class="mb-4 text-base">
+              As long as your radio is connected, even when not actively
+              pinging, the app will submit passive samples for tiles using the
+              RxLog. When your radio receives a group message the app collects
+              parts of the path and radio statistics and sends that to the
+              service to build out the passive map view.
+              <strong
+                >This is disabled if you have an "ignored id" set. Mobile
+                repeaters mess up the data collection because SNR and RSSI
+                values will be completely incorrect for the tile.</strong
+              >
+            </p>
+
+            <h2 class="text-xl font-semibold mb-2 mt-6">
+              Host an instance for your region?
+            </h2>
+            <p class="mb-2 text-base">
+              If you want to set up an instance for your region you have two
+              good options.
+            </p>
+            <ul class="space-y-2 mb-4">
+              <li>
+                Host your own Cloudflare version by following the
+                <a
+                  href="https://github.com/esayles/mesh-map/blob/main/support/setup.md"
+                  >setup instructions</a
+                >.
+              </li>
+              <li>
+                Use the
+                <a href="https://github.com/nullrouten0/meshcore-coverage-map"
+                  >self-hosted fork from nullrouten0</a
+                >.
+              </li>
+            </ul>
+
+            <h2 class="text-xl font-semibold mb-2 mt-6">Privacy</h2>
+            <div class="info-box p-4 rounded-lg">
+              <p class="text-base">
+                The only thing the service stores is the location you send to
+                <code class="px-2 py-1.5 rounded-md text-sm">#wardrive</code>
+                and the id of the first-hop repeater. The web app sends your
+                location to
+                <code class="px-2 py-1.5 rounded-md text-sm">#wardrive</code>
+                and to the service. That's it. Logging on the web app is stored
+                locally. You will be sending your companion radio's name with
+                your location to
+                <code class="px-2 py-1.5 rounded-md text-sm">#wardrive</code>
+                which is a public channel.
+                <strong>Optionally</strong>, if you want to participate in the
+                leaderboard, you can choose to send your radio name with pings.
+              </p>
+            </div>
           </div>
         </section>
       </div>
