@@ -10,51 +10,16 @@ from collections import deque
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from haversine import haversine, Unit
 
-# Globals (prefer environment variables - Cloudflare Pages / system env)
-# Environment variable names used below are the expected Cloudflare Pages
-# environment variables. Values fall back to reasonable defaults from the
-# previous `config.json` so the script continues to work locally without a
-# config file.
+# Globals
+CONFIG = json.load(open("config.json"))
+CENTER_POSITION = tuple(CONFIG["center_position"])
+VALID_DIST = CONFIG["valid_dist"]
+CHANNEL_HASH = CONFIG["channel_hash"]
+CHANNEL_SECRET = bytes.fromhex(CONFIG["channel_secret"])
 
-# Helper to parse env values that may be JSON or simple comma-separated lists
-def _parse_list_env(name, default):
-  v = os.environ.get(name)
-  if v is None:
-    return default
-  try:
-    return json.loads(v)
-  except Exception:
-    return [s.strip() for s in v.split(',') if s.strip()]
-
-# CENTER_POSITION can be provided as JSON (e.g. '[41.6, -72.7]') or
-# as a comma-separated string '41.6,-72.7'. Default is Connecticut center.
-center_env = os.environ.get('CENTER_POSITION')
-if center_env:
-  try:
-    CENTER_POSITION = tuple(json.loads(center_env))
-  except Exception:
-    CENTER_POSITION = tuple(map(float, center_env.split(',')))
-else:
-  CENTER_POSITION = (41.613889, -72.7725)
-
-VALID_DIST = float(os.environ.get('VALID_DIST', os.environ.get('MAX_DISTANCE_MILES', 67)))
-CHANNEL_HASH = os.environ.get('CHANNEL_HASH', 'e0')
-CHANNEL_SECRET = bytes.fromhex(os.environ.get('CHANNEL_SECRET', '4076c315c1ef385fa93f066027320fe5'))
-
-SERVICE_HOST = os.environ.get('SERVICE_HOST', 'https://ct-mesh-map.pages.dev')
+SERVICE_HOST = CONFIG["service_host"]
 ADD_REPEATER_URL = "/put-repeater"
 ADD_SAMPLE_URL = "/put-sample"
-
-# MQTT settings
-MQTT_HOST = os.environ.get('MQTT_HOST', os.environ.get('MQTT_BROKER', 'ct-mqtt.vercel.app'))
-MQTT_PORT = int(os.environ.get('MQTT_PORT', 443))
-MQTT_USERNAME = os.environ.get('MQTT_USERNAME', None)
-MQTT_PASSWORD = os.environ.get('MQTT_PASSWORD', None)
-MQTT_TOPIC = os.environ.get('MQTT_TOPIC', 'meshcore/BDL/+/packets')
-
-# Which observers are considered authoritative. Can be a JSON array or
-# comma-separated list in the env var WATCHED_OBSERVERS.
-WATCHED_OBSERVERS = _parse_list_env('WATCHED_OBSERVERS', ["K1HFZ Base 2", "KO4TSM MQTT Upload", "🐌 base"]) 
 
 SEEN = deque(maxlen=100)
 COORD_PAIR = re.compile(
@@ -235,7 +200,7 @@ def handle_channel_msg(packet):
 def on_connect(client, userdata, flags, reason_code, properties = None):
   if reason_code == 0:
     print("Connected to MQTT Broker")
-    client.subscribe(MQTT_TOPIC)
+    client.subscribe(CONFIG["mqtt_topic"])
   else:
     print(f"Failed to connect, return code {reason_code}", flush = True)
     os._exit(1)
@@ -262,7 +227,7 @@ def on_message(client, userdata, msg):
     if (packet_hash is None or packet_hash in SEEN): return
 
     # Is this one of the "authoritative" observers in the region?
-    if data["origin"] not in WATCHED_OBSERVERS: return
+    if data["origin"] not in CONFIG["watched_observers"]: return
 
     # Is this an advert (4) or group message (5)?
     packet_type = data["packet_type"]
@@ -297,8 +262,10 @@ def main():
     transport="websockets",
     client_id="wardrive_bot",
     protocol=mqtt.MQTTv311)
-  if MQTT_USERNAME or MQTT_PASSWORD:
-    client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
+
+  client.username_pw_set(
+    CONFIG["mqtt_username"],
+    CONFIG["mqtt_password"])
 
   client.tls_set(cert_reqs=ssl.CERT_REQUIRED)
   client.tls_insecure_set(False)
@@ -308,11 +275,11 @@ def main():
   client.on_message = on_message
 
   try:
-    print(f"Connecting to {MQTT_HOST}:{MQTT_PORT}");
-    client.connect(MQTT_HOST, MQTT_PORT, 60)
+    print(f"Connecting to {CONFIG['mqtt_host']}:{CONFIG['mqtt_port']}");
+    client.connect(CONFIG["mqtt_host"], CONFIG["mqtt_port"], 60)
     client.loop_forever()
   except Exception as e:
-    print(f"An error occurred: {e.with_traceback}")
+    print(f"An error occurred: {e}")
 
 
 if __name__ == "__main__":
