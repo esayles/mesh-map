@@ -1,6 +1,6 @@
 {
   "mqtt_host": "mqtt.evansayl.es",
-  "mqtt_port": 8883,
+  "mqtt_port": 443,
   "mqtt_username": "wardrive",
   "mqtt_password": "i5$p%uCVyw3@Fy^jW!5z",
   "mqtt_topic": "meshcore/BDL/+/packets",
