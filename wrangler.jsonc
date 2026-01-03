@@ -6,10 +6,9 @@
   "compatibility_flags": ["nodejs_compat"],
   "vars": {
     "SERVICE_HOST": "https://ct-mesh-map.pages.dev",
-    "MQTT_HOST": "mqtt.evansayl.es",
-    "MQTT_PORT": "443",
-    "MQTT_USERNAME": "wardrive",
-    "MQTT_PASSWORD": "i5$p%uCVyw3@Fy^jW!5z",
+    "MQTT_HOST": "mqtt.ctmesh.org",
+    "MQTT_PORT": "1883",
+    "MQTT_USERNAME": "saylese",
     "MQTT_TOPIC": "meshcore/BDL/+/packets",
     "CENTER_POSITION": "[41.613889,-72.7725]",
     "VALID_DIST": "67",
