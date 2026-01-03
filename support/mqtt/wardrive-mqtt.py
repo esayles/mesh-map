@@ -259,16 +259,12 @@ def main():
   # Initialize the MQTT client
   client = mqtt.Client(
     mqtt.CallbackAPIVersion.VERSION2,
-    transport="websockets",
     client_id="wardrive_bot",
     protocol=mqtt.MQTTv311)
 
   client.username_pw_set(
     CONFIG["mqtt_username"],
     CONFIG["mqtt_password"])
-
-  client.tls_set(cert_reqs=ssl.CERT_REQUIRED)
-  client.tls_insecure_set(False)
 
   client.on_connect = on_connect
   client.on_disconnect = on_disconnect
