@@ -10,24 +10,25 @@ import {
   maxDistanceMiles,
   posFromHash,
   pushMap,
-  sigmoid
-} from './shared.js'
+  sigmoid,
+} from "./shared.js";
 
 // Global Init
-const map = L.map('map', {
+const map = L.map("map", {
   worldCopyJump: true,
   zoomControl: false,
-}).setView(centerPos, 11);
-const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+}).setView(centerPos, 10);
+const osm = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 16,
   minZoom: 8,
-  attribution: '© OpenStreetMap contributors | <a href="/howto" target="_blank">Contribute</a>'
+  attribution:
+    '© OpenStreetMap contributors | <a href="/howto" target="_blank">Contribute</a>',
 }).addTo(map);
 
 // Control state
-let coloringMode = 'simple';
-let repeaterRenderMode = 'none';
-let repeaterSearch = '';
+let coloringMode = "simple";
+let repeaterRenderMode = "none";
+let repeaterSearch = "";
 let showSamples = false;
 let useColorScale = true;
 
@@ -46,9 +47,9 @@ const sampleLayer = L.layerGroup().addTo(map);
 const repeaterLayer = L.layerGroup().addTo(map);
 
 // Map controls
-const mapControl = L.control({ position: 'topleft' });
-mapControl.onAdd = m => {
-  const div = L.DomUtil.create('div', 'mesh-control leaflet-control');
+const mapControl = L.control({ position: "topleft" });
+mapControl.onAdd = (m) => {
+  const div = L.DomUtil.create("div", "mesh-control leaflet-control");
 
   div.innerHTML = `
     <div id="meshMapControlsSection" class="mesh-control-row mesh-control-title interactive">Map Controls</div>
@@ -120,60 +121,55 @@ mapControl.onAdd = m => {
     </div>
   `;
 
-  div.querySelector("#meshMapControlsSection")
-    .addEventListener("click", () => {
-      const topRepeatersList = document.getElementById("meshMapControls");
-      if (topRepeatersList.classList.contains("hidden"))
-        topRepeatersList.classList.remove("hidden");
-      else
-        topRepeatersList.classList.add("hidden");
-    });
+  div.querySelector("#meshMapControlsSection").addEventListener("click", () => {
+    const topRepeatersList = document.getElementById("meshMapControls");
+    if (topRepeatersList.classList.contains("hidden"))
+      topRepeatersList.classList.remove("hidden");
+    else topRepeatersList.classList.add("hidden");
+  });
 
-  div.querySelector("#coverage-colormode-select")
+  div
+    .querySelector("#coverage-colormode-select")
     .addEventListener("change", async (e) => {
       coloringMode = e.target.value;
       await redrawMap();
     });
 
-  div.querySelector("#repeater-filter-select")
+  div
+    .querySelector("#repeater-filter-select")
     .addEventListener("change", (e) => {
       repeaterRenderMode = e.target.value;
       updateAllRepeaterMarkers();
     });
 
-  div.querySelector("#repeater-search")
-    .addEventListener("input", (e) => {
-      repeaterSearch = e.target.value.toLowerCase();
-      updateAllRepeaterMarkers();
-    });
+  div.querySelector("#repeater-search").addEventListener("input", (e) => {
+    repeaterSearch = e.target.value.toLowerCase();
+    updateAllRepeaterMarkers();
+  });
 
-  div.querySelector("#show-samples")
-    .addEventListener("change", (e) => {
-      showSamples = e.target.checked;
-      sampleLayer.eachLayer(s => updateSampleMarkerVisibility(s));
-    });
+  div.querySelector("#show-samples").addEventListener("change", (e) => {
+    showSamples = e.target.checked;
+    sampleLayer.eachLayer((s) => updateSampleMarkerVisibility(s));
+  });
 
-  div.querySelector("#refresh-map-button")
-    .addEventListener("click", () => {
-      rxData = null; // Will get refreshed next access.
-      refreshCoverage();
-    });
+  div.querySelector("#refresh-map-button").addEventListener("click", () => {
+    rxData = null; // Will get refreshed next access.
+    refreshCoverage();
+  });
 
-  div.querySelector("#use-colorscale")
-    .addEventListener("change", async (e) => {
-      const colorScaleEl = document.getElementById("color-scale");
-      useColorScale = e.target.checked;
+  div.querySelector("#use-colorscale").addEventListener("change", async (e) => {
+    const colorScaleEl = document.getElementById("color-scale");
+    useColorScale = e.target.checked;
 
-      if (useColorScale) {
-        colorScaleEl.classList.remove("hidden");
-        colorScaleEl.classList.add("mesh-control-row");
-      } else {
-        colorScaleEl.classList.add("hidden");
-        colorScaleEl.classList.remove("mesh-control-row");
-      }
-      await redrawMap();
-    });
-
+    if (useColorScale) {
+      colorScaleEl.classList.remove("hidden");
+      colorScaleEl.classList.add("mesh-control-row");
+    } else {
+      colorScaleEl.classList.add("hidden");
+      colorScaleEl.classList.remove("mesh-control-row");
+    }
+    await redrawMap();
+  });
 
   // Don’t let clicks on the control bubble up and pan/zoom the map.
   L.DomEvent.disableClickPropagation(div);
@@ -191,23 +187,21 @@ mapControl.onAdd = m => {
 mapControl.addTo(map);
 
 // Top Repeaters
-const repeaterStatsControl = L.control({ position: 'topright' });
-repeaterStatsControl.onAdd = m => {
-  const div = L.DomUtil.create('div', 'mesh-control leaflet-control');
+const repeaterStatsControl = L.control({ position: "topright" });
+repeaterStatsControl.onAdd = (m) => {
+  const div = L.DomUtil.create("div", "mesh-control leaflet-control");
 
   div.innerHTML = `
     <div id="topRepeatersSection" class="mesh-control-row mesh-control-title interactive">Top Repeaters</div>
     <div id="topRepeatersList" class="mesh-control-row hidden max-height-20"></div>
   `;
 
-  div.querySelector("#topRepeatersSection")
-    .addEventListener("click", () => {
-      const topRepeatersList = document.getElementById("topRepeatersList");
-      if (topRepeatersList.classList.contains("hidden"))
-        topRepeatersList.classList.remove("hidden");
-      else
-        topRepeatersList.classList.add("hidden");
-    });
+  div.querySelector("#topRepeatersSection").addEventListener("click", () => {
+    const topRepeatersList = document.getElementById("topRepeatersList");
+    if (topRepeatersList.classList.contains("hidden"))
+      topRepeatersList.classList.remove("hidden");
+    else topRepeatersList.classList.add("hidden");
+  });
 
   // Don’t let clicks on the control bubble up and pan/zoom the map.
   L.DomEvent.disableClickPropagation(div);
@@ -219,9 +213,9 @@ repeaterStatsControl.onAdd = m => {
 repeaterStatsControl.addTo(map);
 
 // Top Contributors
-const senderStatsControl = L.control({ position: 'topright' });
-senderStatsControl.onAdd = m => {
-  const div = L.DomUtil.create('div', 'mesh-control leaflet-control');
+const senderStatsControl = L.control({ position: "topright" });
+senderStatsControl.onAdd = (m) => {
+  const div = L.DomUtil.create("div", "mesh-control leaflet-control");
 
   div.innerHTML = `
     <div id="topSendersSection" class="mesh-control-row mesh-control-title interactive">
@@ -230,7 +224,8 @@ senderStatsControl.onAdd = m => {
     <div id="topSendersList" class="mesh-control-row hidden max-height-20"></div>
   `;
 
-  div.querySelector("#topSendersSection")
+  div
+    .querySelector("#topSendersSection")
     .addEventListener("click", async () => {
       const topSendersList = document.getElementById("topSendersList");
       if (topSendersList.classList.contains("hidden")) {
@@ -248,15 +243,19 @@ senderStatsControl.onAdd = m => {
   // Helper to refresh the stats.
   async function refreshTopSenders(topList) {
     const endpoint = "/get-senders";
-    const resp = await fetch(endpoint, { headers: { 'Accept': 'application/json' } });
+    const resp = await fetch(endpoint, {
+      headers: { Accept: "application/json" },
+    });
 
     if (resp.ok) {
       const data = await resp.json();
       if (topList && data) {
-        topList.innerHTML = '';
+        topList.innerHTML = "";
         let rank = 1;
-        data.forEach(d => {
-          topList.innerHTML += `<div class="top-row"><div>${rank++}</div><div>${escapeHtml(d.name)}</div><div>${d.tiles}</div></div>`;
+        data.forEach((d) => {
+          topList.innerHTML += `<div class="top-row"><div>${rank++}</div><div>${escapeHtml(
+            d.name
+          )}</div><div>${d.tiles}</div></div>`;
         });
       }
     }
@@ -266,55 +265,68 @@ senderStatsControl.onAdd = m => {
 };
 senderStatsControl.addTo(map);
 
+const wardriveLink = L.control({ position: "topright" });
+wardriveLink.onAdd = (m) => {
+  const div = L.DomUtil.create("div", "mesh-control");
+  div.innerHTML = `
+    <div class="mesh-control-row">
+      <label>
+        <a href="/wardrive" target="_blank">How to contribute data</a>
+      </label>
+    </div>
+  `;
+  // Don’t let clicks on the control bubble up and pan/zoom the map.
+  L.DomEvent.disableClickPropagation(div);
+  L.DomEvent.disableScrollPropagation(div);
+  return div;
+};
+wardriveLink.addTo(map);
+
 // Max radius circle.
 L.circle(centerPos, {
   radius: maxDistanceMiles * 1609.34, // meters in mile.
-  color: '#a13139',
+  color: "#a13139",
   weight: 3,
-  fill: false
+  fill: false,
 }).addTo(map);
 
 function escapeHtml(s) {
   return String(s)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;');
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
 }
 
 function shortDateStr(d) {
   return d.toLocaleString([], {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
   });
 }
 
 // Gets a color for a value [0, 1].
 function getColorForValue(v) {
-  if (v > .875) return "#2B2D9F"; // indigo
-  if (v > .75) return "#3F5CCB";  // royal blue
-  if (v > .625) return "#2F8EDB"; // azure
-  if (v > .5) return "#2EC7D3";   // cyan
-  if (v > .375) return "#F1E04F"; // yellow
-  if (v > .25) return "#F4B63D";  // amber
-  if (v > .125) return "#F18F01"; // orange
-  return "#E4572E";               // red-orange
+  if (v > 0.875) return "#2B2D9F"; // indigo
+  if (v > 0.75) return "#3F5CCB"; // royal blue
+  if (v > 0.625) return "#2F8EDB"; // azure
+  if (v > 0.5) return "#2EC7D3"; // cyan
+  if (v > 0.375) return "#F1E04F"; // yellow
+  if (v > 0.25) return "#F4B63D"; // amber
+  if (v > 0.125) return "#F18F01"; // orange
+  return "#E4572E"; // red-orange
 }
 
 function getCoverageStyle(coverage) {
-  const obsColor = '#398821';  // Observed - Green
-  const hrdColor = '#FEAA2C';  // Heard - Orange
-  const missColor = '#E04748'; // Lost - Red
+  const obsColor = "#398821"; // Observed - Green
+  const hrdColor = "#FEAA2C"; // Heard - Orange
+  const missColor = "#E04748"; // Lost - Red
 
   const color =
-    coverage.obs > 0
-      ? obsColor
-      : coverage.hrd > 0
-        ? hrdColor
-        : missColor;
+    coverage.obs > 0 ? obsColor : coverage.hrd > 0 ? hrdColor : missColor;
 
   // Default to "simple" style.
   const style = {
@@ -322,11 +334,11 @@ function getCoverageStyle(coverage) {
     fillOpacity: 0.6,
     opacity: 0.75,
     weight: 1,
-    pane: "overlayPane"
+    pane: "overlayPane",
   };
 
   switch (coloringMode) {
-    case 'effective': {
+    case "effective": {
       // Hits get boosted. Only counting observations.
       const combined = coverage.obs * 0.25 - coverage.lost * 0.125;
       if (useColorScale) {
@@ -341,7 +353,7 @@ function getCoverageStyle(coverage) {
       break;
     }
 
-    case 'observedPct': {
+    case "observedPct": {
       const sampleCount = coverage.obs + coverage.lost;
       const observedPercent = coverage.obs / sampleCount;
       if (observedPercent > 0) {
@@ -358,7 +370,7 @@ function getCoverageStyle(coverage) {
       break;
     }
 
-    case 'heardPct': {
+    case "heardPct": {
       const sampleCount = coverage.hrd + coverage.lost;
       const heardPercent = coverage.hrd / sampleCount;
       if (heardPercent > 0) {
@@ -375,13 +387,13 @@ function getCoverageStyle(coverage) {
       break;
     }
 
-    case 'notRepeated': {
+    case "notRepeated": {
       const diff = coverage.hrd - coverage.obs;
       if (diff > 0) {
         if (useColorScale) {
           style.color = getColorForValue(lerp(diff, 1, 8));
         } else {
-          style.fillOpacity = lerp(diff, 1, 8, .4, .9);
+          style.fillOpacity = lerp(diff, 1, 8, 0.4, 0.9);
         }
       } else {
         style.opacity = 0.1;
@@ -390,8 +402,8 @@ function getCoverageStyle(coverage) {
       break;
     }
 
-    case 'rxLogSnr':
-    case 'bySnr': {
+    case "rxLogSnr":
+    case "bySnr": {
       if (coverage.snr != null) {
         if (useColorScale) {
           style.color = getColorForValue(lerp(coverage.snr, -12, 12));
@@ -408,8 +420,8 @@ function getCoverageStyle(coverage) {
       break;
     }
 
-    case 'rxLogRssi':
-    case 'byRssi': {
+    case "rxLogRssi":
+    case "byRssi": {
       if (coverage.rssi != null) {
         if (useColorScale) {
           style.color = getColorForValue(lerp(coverage.rssi, -120, -40));
@@ -427,45 +439,45 @@ function getCoverageStyle(coverage) {
       break;
     }
 
-    case 'lastObserved': {
+    case "lastObserved": {
       const age = ageInDays(fromTruncatedTime(coverage.lot));
       if (useColorScale) {
         style.color = getColorForValue(lerp(age, 30, 0));
       } else {
-        style.fillOpacity = Math.max(0.1, (-0.075 * age + 0.85));
+        style.fillOpacity = Math.max(0.1, -0.075 * age + 0.85);
       }
       break;
     }
 
-    case 'lastHeard': {
+    case "lastHeard": {
       const age = ageInDays(fromTruncatedTime(coverage.lht));
       if (useColorScale) {
         style.color = getColorForValue(lerp(age, 30, 0));
       } else {
-        style.fillOpacity = Math.max(0.1, (-0.075 * age + 0.85));
+        style.fillOpacity = Math.max(0.1, -0.075 * age + 0.85);
       }
       break;
     }
 
-    case 'lastUpdated': {
+    case "lastUpdated": {
       const age = ageInDays(fromTruncatedTime(coverage.ut));
       if (useColorScale) {
         style.color = getColorForValue(lerp(age, 30, 0));
       } else {
-        style.fillOpacity = Math.max(0.1, (-0.075 * age + 0.85));
+        style.fillOpacity = Math.max(0.1, -0.075 * age + 0.85);
       }
       break;
     }
 
-    case 'pastDay': {
+    case "pastDay": {
       const age = ageInDays(fromTruncatedTime(coverage.ut));
       style.opacity = age <= 1 ? 0.75 : 0.1;
       style.fillOpacity = age <= 1 ? 0.75 : 0.1;
       break;
     }
 
-    case 'rxLogRptrCnt':
-    case 'repeaterCount': {
+    case "rxLogRptrCnt":
+    case "repeaterCount": {
       const repeaterCount = coverage.rptr?.length;
       if (repeaterCount) {
         if (useColorScale) {
@@ -481,7 +493,7 @@ function getCoverageStyle(coverage) {
       break;
     }
 
-    case 'sampleCount': {
+    case "sampleCount": {
       // Heard is a superset of Observed.
       const sampleCount = coverage.hrd + coverage.lost;
       if (useColorScale) {
@@ -492,7 +504,8 @@ function getCoverageStyle(coverage) {
       }
     }
 
-    default: break;
+    default:
+      break;
   }
 
   return style;
@@ -502,15 +515,21 @@ function rxCoverageMarker(c) {
   const [minLat, minLon, maxLat, maxLon] = geo.decode_bbox(c.hash);
   const updated = new Date(c.time);
   const style = getCoverageStyle(c);
-  const rect = L.rectangle([[minLat, minLon], [maxLat, maxLon]], style);
+  const rect = L.rectangle(
+    [
+      [minLat, minLon],
+      [maxLat, maxLon],
+    ],
+    style
+  );
   const details = `
     <div><b>${c.hash}</b>
     <span class="text-xs">${maxLat.toFixed(4)},${maxLon.toFixed(4)}</span></div>
     <div>Samples: ${c.count}</div>
     <div>SNR: ${c.snr.toFixed(2)} · RSSI: ${c.rssi.toFixed(2)}</div>
-    ${c.rptr.length > 0 ? `<div>Repeaters: ${c.rptr.join(', ')}</div>` : ''}
+    ${c.rptr.length > 0 ? `<div>Repeaters: ${c.rptr.join(", ")}</div>` : ""}
     <div class="text-xs">
-    ${c.hrd ? `<div>Updated: ${shortDateStr(updated)}</div>` : ''}
+    ${c.hrd ? `<div>Updated: ${shortDateStr(updated)}</div>` : ""}
     </div>`;
 
   rect.coverage = c;
@@ -526,27 +545,41 @@ function coverageMarker(c) {
   const lastHeardDate = new Date(fromTruncatedTime(c.lht));
   const lastObservedDate = new Date(fromTruncatedTime(c.lot));
   const style = getCoverageStyle(c);
-  const rect = L.rectangle([[minLat, minLon], [maxLat, maxLon]], style);
+  const rect = L.rectangle(
+    [
+      [minLat, minLon],
+      [maxLat, maxLon],
+    ],
+    style
+  );
   const details = `
     <div><b>${c.id} · (${(100 * obsRatio).toFixed(0)}%)</b>
     <span class="text-xs">${maxLat.toFixed(4)},${maxLon.toFixed(4)}</span></div>
     <div>Observed: ${c.obs} · Heard: ${c.hrd} · Lost: ${c.lost}</div>
-    ${c.snr || c.rssi ? `<div>SNR: ${c.snr ?? '✕'} · RSSI: ${c.rssi ?? '✕'}</div>` : ''}
-    ${c.rptr.length > 0 ? `<div>Repeaters: ${c.rptr.join(', ')}</div>` : ''}
+    ${
+      c.snr || c.rssi
+        ? `<div>SNR: ${c.snr ?? "✕"} · RSSI: ${c.rssi ?? "✕"}</div>`
+        : ""
+    }
+    ${c.rptr.length > 0 ? `<div>Repeaters: ${c.rptr.join(", ")}</div>` : ""}
     <div class="text-xs">
-    ${c.ut ? `<div>Updated: ${shortDateStr(updateDate)}</div>` : ''}
-    ${c.hrd ? `<div>Heard: ${shortDateStr(lastHeardDate)}</div>` : ''}
-    ${c.obs ? `<div>Observed: ${shortDateStr(lastObservedDate)}</div>` : ''}
+    ${c.ut ? `<div>Updated: ${shortDateStr(updateDate)}</div>` : ""}
+    ${c.hrd ? `<div>Heard: ${shortDateStr(lastHeardDate)}</div>` : ""}
+    ${c.obs ? `<div>Observed: ${shortDateStr(lastObservedDate)}</div>` : ""}
     </div>`;
 
   rect.coverage = c;
   rect.bindPopup(details, { maxWidth: 320 });
-  rect.on('popupopen', e => updateAllEdgeVisibility(e.target.coverage, false));
-  rect.on('popupclose', () => updateAllEdgeVisibility());
+  rect.on("popupopen", (e) =>
+    updateAllEdgeVisibility(e.target.coverage, false)
+  );
+  rect.on("popupclose", () => updateAllEdgeVisibility());
 
   if (window.matchMedia("(hover: hover)").matches) {
-    rect.on('mouseover', e => updateAllEdgeVisibility(e.target.coverage, false));
-    rect.on('mouseout', () => updateAllEdgeVisibility());
+    rect.on("mouseover", (e) =>
+      updateAllEdgeVisibility(e.target.coverage, false)
+    );
+    rect.on("mouseout", () => updateAllEdgeVisibility());
   }
 
   c.marker = rect;
@@ -556,32 +589,31 @@ function coverageMarker(c) {
 function sampleMarker(s) {
   const [lat, lon] = posFromHash(s.id);
   const path = s.path ?? [];
-  const color =
-    s.obs
-      ? '#07ac07'    // Green
-      : path.length > 0
-        ? '#feaa2c'  // Orange
-        : '#e96767'; // Red
+  const color = s.obs
+    ? "#07ac07" // Green
+    : path.length > 0
+    ? "#feaa2c" // Orange
+    : "#e96767"; // Red
   const style = {
     radius: 4,
     weight: 1,
-    opacity: .9,
+    opacity: 0.9,
     color: "white",
     fillColor: color,
-    fillOpacity: .75,
+    fillOpacity: 0.75,
     pane: "markerPane",
-    className: "marker-shadow"
+    className: "marker-shadow",
   };
   const marker = L.circleMarker([lat, lon], style);
   const date = new Date(fromTruncatedTime(s.time));
   const details = `
     <div><b>${lat.toFixed(4)}, ${lon.toFixed(4)}</b></div>
-    ${s.snr && s.rssi ? `<div>SNR: ${s.snr} · RSSI: ${s.rssi}</div>` : ''}
-    ${path.length > 0 ? `<div>Hit: ${path.join(', ')}</div>` : ''}
+    ${s.snr && s.rssi ? `<div>SNR: ${s.snr} · RSSI: ${s.rssi}</div>` : ""}
+    ${path.length > 0 ? `<div>Hit: ${path.join(", ")}</div>` : ""}
     <div class="text-xs">${shortDateStr(date)}</div>
     <div class="text-xs">Geohash: ${s.id}</div>`;
   marker.bindPopup(details, { maxWidth: 320 });
-  marker.on('add', () => updateSampleMarkerVisibility(marker));
+  marker.on("add", () => updateSampleMarkerVisibility(marker));
   return marker;
 }
 
@@ -589,29 +621,35 @@ function repeaterMarker(r) {
   const time = fromTruncatedTime(r.time);
   const stale = ageInDays(time) > 2;
   const dead = ageInDays(time) > 8;
-  const ageClass = (dead ? "dead" : (stale ? "stale" : ""));
+  const ageClass = dead ? "dead" : stale ? "stale" : "";
   const icon = L.divIcon({
-    className: '', // Don't use default Leaflet style.
+    className: "", // Don't use default Leaflet style.
     html: `<div class="repeater-dot ${ageClass}"><span>${r.id}</span></div>`,
     iconSize: [20, 20],
-    iconAnchor: [10, 10]
+    iconAnchor: [10, 10],
   });
   const details = `
     <div><b>${escapeHtml(r.name)} [${r.id}]</b></div>
-    <div>${r.lat.toFixed(4)}, ${r.lon.toFixed(4)} · <em>${(r.elev).toFixed(0)}m</em></div>
+    <div>${r.lat.toFixed(4)}, ${r.lon.toFixed(4)} · <em>${r.elev.toFixed(
+    0
+  )}m</em></div>
     <div class="text-xs">Last advert: ${shortDateStr(new Date(time))}</div>
     <div class="text-xs">Geohash: ${r.hash}</div>`;
   const marker = L.marker([r.lat, r.lon], { icon: icon });
 
   marker.repeater = r;
   marker.bindPopup(details, { maxWidth: 320 });
-  marker.on('add', () => updateRepeaterMarkerVisibility(marker));
-  marker.on('popupopen', e => updateAllEdgeVisibility(e.target.repeater, true));
-  marker.on('popupclose', () => updateAllEdgeVisibility());
+  marker.on("add", () => updateRepeaterMarkerVisibility(marker));
+  marker.on("popupopen", (e) =>
+    updateAllEdgeVisibility(e.target.repeater, true)
+  );
+  marker.on("popupclose", () => updateAllEdgeVisibility());
 
   if (window.matchMedia("(hover: hover)").matches) {
-    marker.on('mouseover', e => updateAllEdgeVisibility(e.target.repeater, true));
-    marker.on('mouseout', () => updateAllEdgeVisibility());
+    marker.on("mouseover", (e) =>
+      updateAllEdgeVisibility(e.target.repeater, true)
+    );
+    marker.on("mouseout", () => updateAllEdgeVisibility());
   }
 
   r.marker = marker;
@@ -626,10 +664,10 @@ function getBestRepeater(fromPos, repeaterList) {
   let minRepeater = null;
   let minDist = 30000; // Bigger than any valid dist.
 
-  repeaterList.forEach(r => {
+  repeaterList.forEach((r) => {
     const to = [r.lat, r.lon];
     const elev = r.elev ?? 0; // Allow height to impact distance.
-    const dist = haversineMiles(fromPos, to) - (0.5 * Math.sqrt(elev));
+    const dist = haversineMiles(fromPos, to) - 0.5 * Math.sqrt(elev);
     if (dist < minDist) {
       minDist = dist;
       minRepeater = r;
@@ -641,11 +679,11 @@ function getBestRepeater(fromPos, repeaterList) {
 
 function shouldShowRepeater(r) {
   // Prioritize searching
-  if (repeaterSearch !== '') {
+  if (repeaterSearch !== "") {
     return r.id.toLowerCase().startsWith(repeaterSearch);
   } else if (repeaterRenderMode === "hit") {
     return r.hitBy.length > 0;
-  } else if (repeaterRenderMode === 'none') {
+  } else if (repeaterRenderMode === "none") {
     return false;
   }
   return true;
@@ -662,7 +700,11 @@ function updateSampleMarkerVisibility(s) {
   }
 }
 
-function updateRepeaterMarkerVisibility(m, forceVisible = false, highlight = false) {
+function updateRepeaterMarkerVisibility(
+  m,
+  forceVisible = false,
+  highlight = false
+) {
   const el = m.getElement();
   if (forceVisible || shouldShowRepeater(m.repeater)) {
     el.classList.remove("hidden");
@@ -680,10 +722,13 @@ function updateRepeaterMarkerVisibility(m, forceVisible = false, highlight = fal
 }
 
 function updateAllRepeaterMarkers() {
-  repeaterLayer.eachLayer(m => updateRepeaterMarkerVisibility(m));
+  repeaterLayer.eachLayer((m) => updateRepeaterMarkerVisibility(m));
 }
 
-function updateCoverageMarkerHighlight(m, { highlight = false, dim = false } = {}) {
+function updateCoverageMarkerHighlight(
+  m,
+  { highlight = false, dim = false } = {}
+) {
   const el = m.getElement();
   el.classList.remove("highlighted-path");
   el.classList.remove("dimmed-path");
@@ -696,7 +741,9 @@ function updateCoverageMarkerHighlight(m, { highlight = false, dim = false } = {
 }
 
 function updateAllCoverageMarkers(dim = false) {
-  coverageLayer.eachLayer(m => updateCoverageMarkerHighlight(m, { dim: dim }));
+  coverageLayer.eachLayer((m) =>
+    updateCoverageMarkerHighlight(m, { dim: dim })
+  );
 }
 
 function updateAllEdgeVisibility(end, dimTiles = false) {
@@ -707,7 +754,7 @@ function updateAllEdgeVisibility(end, dimTiles = false) {
   updateAllRepeaterMarkers();
   updateAllCoverageMarkers(dimTiles && end !== undefined);
 
-  edgeLayer.eachLayer(e => {
+  edgeLayer.eachLayer((e) => {
     if (end !== undefined && e.ends.includes(end)) {
       // e.ends is [repeater, coverage]
       markersToOverride.push(e.ends[0].marker);
@@ -719,10 +766,14 @@ function updateAllEdgeVisibility(end, dimTiles = false) {
   });
 
   // Force connected repeaters to be shown.
-  markersToOverride.forEach(m => updateRepeaterMarkerVisibility(m, true, true));
+  markersToOverride.forEach((m) =>
+    updateRepeaterMarkerVisibility(m, true, true)
+  );
 
   // Highlight connected coverage markers.
-  coverageToHighlight.forEach(m => updateCoverageMarkerHighlight(m, { highlight: true }));
+  coverageToHighlight.forEach((m) =>
+    updateCoverageMarkerHighlight(m, { highlight: true })
+  );
 }
 
 async function redrawMap() {
@@ -750,7 +801,7 @@ async function renderPassive() {
     try {
       const resp = await fetch("/get-rx-samples");
       rxData = (await resp.json()) ?? [];
-      rxData.forEach(c => {
+      rxData.forEach((c) => {
         c.rptr = c.repeaters;
         delete c.repeaters;
       });
@@ -761,7 +812,7 @@ async function renderPassive() {
   }
 
   // Add coverage boxes.
-  rxData.forEach(c => {
+  rxData.forEach((c) => {
     coverageLayer.addLayer(rxCoverageMarker(c));
   });
 }
@@ -779,23 +830,23 @@ function renderNodes(nodes) {
   });
 
   // Add recent samples.
-  nodes.samples.forEach(s => {
+  nodes.samples.forEach((s) => {
     sampleLayer.addLayer(sampleMarker(s));
   });
 
   // Add repeaters.
   const repeatersToAdd = [...idToRepeaters.values()].flat();
-  repeatersToAdd.forEach(r => {
+  repeatersToAdd.forEach((r) => {
     repeaterLayer.addLayer(repeaterMarker(r));
   });
 
   // Add edges.
   // TODO: Render on the fly instead to keep object count down?
-  edgeList.forEach(e => {
+  edgeList.forEach((e) => {
     const style = {
       weight: 2,
       opacity: 0,
-      dashArray: '2,4',
+      dashArray: "2,4",
       interactive: false,
     };
     const line = L.polyline([e.repeater.pos, e.coverage.pos], style);
@@ -805,12 +856,14 @@ function renderNodes(nodes) {
 }
 
 function renderTopRepeaters() {
-  const topList = document.getElementById('topRepeatersList');
+  const topList = document.getElementById("topRepeatersList");
   if (topList && topRepeaters) {
-    topList.innerHTML = '';
+    topList.innerHTML = "";
     let rank = 1;
     topRepeaters.forEach(([id, count]) => {
-      topList.innerHTML += `<div class="top-row"><div>${rank++}</div><div>${escapeHtml(id)}</div><div>${count}</div></div>`;
+      topList.innerHTML += `<div class="top-row"><div>${rank++}</div><div>${escapeHtml(
+        id
+      )}</div><div>${count}</div></div>`;
     });
   }
 }
@@ -821,7 +874,7 @@ function buildIndexes(nodes) {
   edgeList = [];
 
   // Index coverage items.
-  nodes.coverage.forEach(c => {
+  nodes.coverage.forEach((c) => {
     c.pos = posFromHash(c.id);
     if (c.rptr === undefined) c.rptr = [];
     hashToCoverage.set(c.id, c);
@@ -829,7 +882,7 @@ function buildIndexes(nodes) {
 
   // Add samples to coverage items.
   // TODO: shared helper for coverage ctor.
-  nodes.samples.forEach(s => {
+  nodes.samples.forEach((s) => {
     const key = s.id.substring(0, 6);
     let coverage = hashToCoverage.get(key);
     if (!coverage) {
@@ -860,15 +913,14 @@ function buildIndexes(nodes) {
     coverage.lot = Math.max(coverage.lot, observed ? s.time : 0);
     coverage.snr = definedOr(Math.max, coverage.snr, s.snr);
     coverage.rssi = definedOr(Math.max, coverage.rssi, s.rssi);
-    path.forEach(p => {
+    path.forEach((p) => {
       const lp = p.toLowerCase();
-      if (!coverage.rptr.includes(lp))
-        coverage.rptr.push(lp);
+      if (!coverage.rptr.includes(lp)) coverage.rptr.push(lp);
     });
   });
 
   // Index repeaters.
-  nodes.repeaters.forEach(r => {
+  nodes.repeaters.forEach((r) => {
     r.hitBy = [];
     r.pos = posFromHash(r.hash);
     [r.lat, r.lon] = r.pos;
@@ -877,10 +929,9 @@ function buildIndexes(nodes) {
 
   // Build connections.
   hashToCoverage.entries().forEach(([key, coverage]) => {
-    coverage.rptr.forEach(r => {
+    coverage.rptr.forEach((r) => {
       const candidateRepeaters = idToRepeaters.get(r);
-      if (candidateRepeaters === undefined)
-        return;
+      if (candidateRepeaters === undefined) return;
 
       const bestRepeater = getBestRepeater(coverage.pos, candidateRepeaters);
       bestRepeater.hitBy.push(coverage);
@@ -889,17 +940,25 @@ function buildIndexes(nodes) {
   });
 
   // Build top repeaters list (top 50).
-  const repeaterGroups = Object.groupBy(edgeList, e => `[${e.repeater.id}] ${e.repeater.name}`);
-  const sortedGroups = Object.entries(repeaterGroups).toSorted(([, a], [, b]) => b.length - a.length);
-  topRepeaters = sortedGroups.slice(0, 50).map(([id, tiles]) => [id, tiles.length]);
+  const repeaterGroups = Object.groupBy(
+    edgeList,
+    (e) => `[${e.repeater.id}] ${e.repeater.name}`
+  );
+  const sortedGroups = Object.entries(repeaterGroups).toSorted(
+    ([, a], [, b]) => b.length - a.length
+  );
+  topRepeaters = sortedGroups
+    .slice(0, 50)
+    .map(([id, tiles]) => [id, tiles.length]);
 }
 
 export async function refreshCoverage() {
   const endpoint = "/get-nodes";
-  const resp = await fetch(endpoint, { headers: { 'Accept': 'application/json' } });
+  const resp = await fetch(endpoint, {
+    headers: { Accept: "application/json" },
+  });
 
-  if (!resp.ok)
-    throw new Error(`HTTP ${resp.status} ${resp.statusText}`);
+  if (!resp.ok) throw new Error(`HTTP ${resp.status} ${resp.statusText}`);
 
   nodes = await resp.json();
   buildIndexes(nodes);
