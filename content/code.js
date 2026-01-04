@@ -27,7 +27,7 @@ const osm = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 
 // Control state
 let coloringMode = "simple";
-let repeaterRenderMode = "none";
+let repeaterRenderMode = "all";
 let repeaterSearch = "";
 let showSamples = false;
 let useColorScale = true;
