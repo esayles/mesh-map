@@ -81,9 +81,9 @@ mapControl.onAdd = (m) => {
         <label>
           Repeaters:
           <select id="repeater-filter-select">
-            <option value="all" title="Show all repeaters">All</option>
+            <option value="all" title="Show all repeaters" selected>All</option>
             <option value="hit" title="Show repeaters hit by pings">Hit</option>
-            <option value="none" title="Hide all repeaters" selected>None</option>
+            <option value="none" title="Hide all repeaters">None</option>
           </select>
         </label>
       </div>
