@@ -4,7 +4,7 @@
  * Format: { keys: [{ metadata: { id, name, lat, lon } }] }
  */
 
-const geo = await import("ngeohash");
+import { posFromHash } from '../content/shared.js';
 
 export async function onRequest(context) {
   const { results } = await context.env.DB
@@ -14,7 +14,7 @@ export async function onRequest(context) {
   // Transform repeaters to migration format
   // Need to decode the geohash to get lat/lon
   const keys = results.map((repeater) => {
-    const { latitude, longitude } = geo.decode(repeater.hash);
+    const [latitude, longitude] = posFromHash(repeater.hash);
 
     return {
       metadata: {
