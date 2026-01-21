@@ -40,7 +40,7 @@ export async function onRequest(context) {
       time: cov.time,
       lastObserved: cov.lastObserved,
       lastHeard: cov.lastHeard,
-      observed: cov.observed,
+      observed: cov.observed > 0,
       heard: cov.heard,
       lost: cov.lost,
       path: JSON.parse(cov.repeaters || "[]"),
